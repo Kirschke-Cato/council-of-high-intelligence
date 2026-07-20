@@ -1,0 +1,1058 @@
+<title>Cato on YouTube — Channel Revamp Audit</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  :root{
+    --paper:#F1F3F3; --paper-raised:#FFFFFF; --paper-sunken:#E6EBEB;
+    --ink:#12181B; --ink-soft:#48585E; --ink-faint:#7C8B90; --line:#D7DEDE;
+    --signal:#146B96; --signal-ink:#0E4E6E; --signal-soft:rgba(20,107,150,.10); --signal-line:rgba(20,107,150,.35);
+    --good:#2F8F55; --good-bg:rgba(47,143,85,.12);
+    --warning:#A8790A; --warning-bg:rgba(168,121,10,.14);
+    --critical:#C1442E; --critical-bg:rgba(193,68,46,.12);
+    --font-display:Georgia,"Iowan Old Style","Times New Roman",serif;
+    --font-body:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --font-mono:ui-monospace,"SF Mono","Cascadia Code","Segoe UI Mono",Consolas,"Roboto Mono",monospace;
+    --radius:3px;
+    --shadow:0 1px 2px rgba(18,24,27,.07),0 1px 1px rgba(18,24,27,.04);
+    --sp1:4px;--sp2:8px;--sp3:12px;--sp4:16px;--sp5:24px;--sp6:32px;--sp7:48px;--sp8:64px;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --paper:#0F1416; --paper-raised:#171F22; --paper-sunken:#0A0D0E;
+      --ink:#E7ECEC; --ink-soft:#A2B2B5; --ink-faint:#647376; --line:#263034;
+      --signal:#2A93BD; --signal-ink:#7FCBE8; --signal-soft:rgba(42,147,189,.14); --signal-line:rgba(42,147,189,.4);
+      --good:#3C9E5C; --good-bg:rgba(60,158,92,.16);
+      --warning:#B8860B; --warning-bg:rgba(184,134,11,.18);
+      --critical:#C43D2E; --critical-bg:rgba(196,61,46,.16);
+      --shadow:0 1px 3px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#0F1416; --paper-raised:#171F22; --paper-sunken:#0A0D0E;
+    --ink:#E7ECEC; --ink-soft:#A2B2B5; --ink-faint:#647376; --line:#263034;
+    --signal:#2A93BD; --signal-ink:#7FCBE8; --signal-soft:rgba(42,147,189,.14); --signal-line:rgba(42,147,189,.4);
+    --good:#3C9E5C; --good-bg:rgba(60,158,92,.16);
+    --warning:#B8860B; --warning-bg:rgba(184,134,11,.18);
+    --critical:#C43D2E; --critical-bg:rgba(196,61,46,.16);
+    --shadow:0 1px 3px rgba(0,0,0,.5);
+  }
+  :root[data-theme="light"]{
+    --paper:#F1F3F3; --paper-raised:#FFFFFF; --paper-sunken:#E6EBEB;
+    --ink:#12181B; --ink-soft:#48585E; --ink-faint:#7C8B90; --line:#D7DEDE;
+    --signal:#146B96; --signal-ink:#0E4E6E; --signal-soft:rgba(20,107,150,.10); --signal-line:rgba(20,107,150,.35);
+    --good:#2F8F55; --good-bg:rgba(47,143,85,.12);
+    --warning:#A8790A; --warning-bg:rgba(168,121,10,.14);
+    --critical:#C1442E; --critical-bg:rgba(193,68,46,.12);
+    --shadow:0 1px 2px rgba(18,24,27,.07),0 1px 1px rgba(18,24,27,.04);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:var(--font-body); font-size:16px; line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{ background:var(--signal-soft); }
+  h1,h2,h3,h4{ font-family:var(--font-display); font-weight:700; text-wrap:balance; margin:0; color:var(--ink); }
+  a{ color:var(--signal-ink); text-decoration-thickness:1px; }
+  a:hover{ text-decoration-color:var(--signal); }
+  :focus-visible{ outline:2px solid var(--signal); outline-offset:2px; border-radius:2px; }
+  .mono{ font-family:var(--font-mono); }
+  .tabular{ font-variant-numeric:tabular-nums; }
+  .eyebrow{
+    font-family:var(--font-mono); font-size:.72rem; letter-spacing:.11em; text-transform:uppercase;
+    color:var(--ink-faint); display:flex; align-items:center; gap:var(--sp2); margin:0 0 var(--sp2) 0;
+  }
+  .eyebrow .rule{ height:1px; flex:1; background:var(--line); }
+
+  /* ---------- layout shells ---------- */
+  .wrap{ max-width:1180px; margin:0 auto; padding:0 var(--sp5); }
+  .prose{ max-width:40em; }
+  section{ padding:var(--sp8) 0; border-bottom:1px solid var(--line); }
+  section:last-of-type{ border-bottom:none; }
+  .section-head{ display:flex; flex-wrap:wrap; align-items:baseline; gap:var(--sp4); margin-bottom:var(--sp6); }
+  .section-head h2{ font-size:2rem; }
+  .section-head .num{ font-family:var(--font-mono); color:var(--ink-faint); font-size:.9rem; }
+  .section-sub{ color:var(--ink-soft); font-size:1.02rem; max-width:46em; margin-top:var(--sp2); }
+
+  /* ---------- header ---------- */
+  header.masthead{
+    position:sticky; top:0; z-index:40; background:var(--paper); border-bottom:1px solid var(--line);
+    backdrop-filter:saturate(140%) blur(6px);
+  }
+  .masthead-inner{ display:flex; align-items:center; justify-content:space-between; gap:var(--sp4); padding:var(--sp3) 0; }
+  .brand{ display:flex; align-items:baseline; gap:var(--sp3); flex:0 1 auto; min-width:0; overflow:hidden; }
+  .brand .mark{ font-family:var(--font-mono); font-weight:700; letter-spacing:.04em; font-size:.92rem; flex:0 0 auto; }
+  .brand .mark .slash{ color:var(--signal); }
+  .brand .tag{ font-family:var(--font-mono); font-size:.72rem; color:var(--ink-faint); letter-spacing:.03em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  nav.jump{ display:flex; align-items:center; gap:var(--sp1); overflow-x:auto; scrollbar-width:none; min-width:0; flex:0 1 auto; }
+  nav.jump::-webkit-scrollbar{ display:none; }
+  @media (max-width:640px){ .brand .tag{ display:none; } }
+  nav.jump a{
+    font-family:var(--font-mono); font-size:.78rem; color:var(--ink-soft); text-decoration:none;
+    padding:6px 10px; border-radius:var(--radius); white-space:nowrap;
+  }
+  nav.jump a:hover{ color:var(--ink); background:var(--paper-sunken); }
+  .theme-toggle{
+    border:1px solid var(--line); background:var(--paper-raised); color:var(--ink-soft);
+    width:32px; height:32px; border-radius:var(--radius); cursor:pointer; display:flex; align-items:center; justify-content:center;
+    flex:0 0 auto;
+  }
+  .theme-toggle:hover{ color:var(--ink); border-color:var(--ink-faint); }
+  .theme-toggle svg{ width:15px; height:15px; }
+  .theme-toggle .moon{ display:none; }
+  :root[data-theme="dark"] .theme-toggle .sun{ display:none; }
+  :root[data-theme="dark"] .theme-toggle .moon{ display:block; }
+  @media (prefers-color-scheme:dark){
+    .theme-toggle .sun{ display:none; }
+    .theme-toggle .moon{ display:block; }
+  }
+  :root[data-theme="light"] .theme-toggle .sun{ display:block; }
+  :root[data-theme="light"] .theme-toggle .moon{ display:none; }
+
+  /* ---------- hero ---------- */
+  .hero{ padding-top:var(--sp7); }
+  .status-chip{
+    display:inline-flex; align-items:center; gap:7px; font-family:var(--font-mono); font-size:.74rem;
+    letter-spacing:.04em; text-transform:uppercase; padding:5px 10px; border-radius:var(--radius);
+    background:var(--critical-bg); color:var(--critical); border:1px solid rgba(193,68,46,.3);
+  }
+  .status-dot{ width:7px; height:7px; border-radius:50%; background:currentColor; flex:0 0 auto; }
+  .hero h1{ font-size:2.6rem; line-height:1.15; margin:var(--sp4) 0 var(--sp4) 0; max-width:20ch; }
+  .hero .lede{ color:var(--ink-soft); font-size:1.12rem; max-width:52em; }
+
+  /* ---------- stat tiles ---------- */
+  .stat-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line);
+    border:1px solid var(--line); margin-top:var(--sp6); }
+  @media (max-width:820px){ .stat-grid{ grid-template-columns:repeat(2,1fr); } }
+  .stat{ background:var(--paper-raised); padding:var(--sp5); display:flex; flex-direction:column; gap:6px; min-width:0; }
+  .stat .label{ font-family:var(--font-mono); font-size:.72rem; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-faint); }
+  .stat .value{ font-family:var(--font-mono); font-size:2.05rem; font-weight:600; line-height:1; }
+  .stat .value.critical{ color:var(--critical); }
+  .stat .value.good{ color:var(--good); }
+  .stat .ctx{ font-size:.86rem; color:var(--ink-soft); }
+
+  /* ---------- packaging-gap hero chart ---------- */
+  .gapgrid{ display:grid; grid-template-columns:1fr 1fr; gap:var(--sp5); margin-top:var(--sp6); }
+  @media (max-width:760px){ .gapgrid{ grid-template-columns:1fr; } }
+  .gapcard{ background:var(--paper-raised); border:1px solid var(--line); padding:var(--sp5); }
+  .gapcard .gaptitle{ font-size:.98rem; color:var(--ink-soft); margin-bottom:var(--sp4); }
+  .gapcard .gaptitle b{ color:var(--ink); }
+  .gaprow{ display:grid; grid-template-columns:100px 1fr 92px; align-items:center; gap:var(--sp3); margin-bottom:var(--sp3); cursor:default; }
+  .gaprow .who{ font-size:.84rem; color:var(--ink-soft); }
+  .gapbar-track{ height:22px; background:var(--paper-sunken); position:relative; border-radius:2px; overflow:hidden; }
+  .gapbar-fill{ position:absolute; inset:0 auto 0 0; background:var(--ink-faint); border-radius:2px; transition:filter .15s; }
+  .gapbar-fill.hot{ background:var(--signal); }
+  .gaprow:hover .gapbar-fill, .gaprow:focus-within .gapbar-fill{ filter:brightness(1.12); }
+  .gapval{ font-family:var(--font-mono); font-size:.86rem; text-align:right; font-weight:600; }
+  .gapmult{ text-align:center; margin-top:var(--sp4); padding-top:var(--sp4); border-top:1px dashed var(--line); }
+  .gapmult .n{ font-family:var(--font-mono); font-size:2.1rem; font-weight:700; color:var(--critical); }
+  .gapmult .d{ font-size:.84rem; color:var(--ink-soft); }
+
+  /* ---------- tooltip ---------- */
+  #tooltip{
+    position:fixed; z-index:100; pointer-events:none; max-width:240px; font-size:.8rem;
+    background:var(--ink); color:var(--paper); padding:8px 10px; border-radius:var(--radius);
+    box-shadow:var(--shadow); line-height:1.35; transform:translate(-50%,-100%); margin-top:-10px;
+  }
+  :root[data-theme="dark"] #tooltip{ background:var(--paper-raised); color:var(--ink); border:1px solid var(--line); }
+  @media (prefers-color-scheme:dark){
+    #tooltip{ background:var(--paper-raised); color:var(--ink); border:1px solid var(--line); }
+  }
+
+  /* ---------- reco mini list (exec summary) ---------- */
+  .mini-reco{ list-style:none; margin:var(--sp5) 0 0 0; padding:0; display:flex; flex-direction:column; gap:var(--sp2); }
+  .mini-reco li{ display:flex; gap:var(--sp3); font-size:.95rem; padding:var(--sp2) 0; border-bottom:1px solid var(--line); }
+  .mini-reco li:last-child{ border-bottom:none; }
+  .mini-reco .idx{ font-family:var(--font-mono); color:var(--signal); font-weight:700; flex:0 0 22px; }
+
+  /* ---------- scale strip (audit) ---------- */
+  .scalebar{ display:flex; flex-wrap:wrap; gap:var(--sp6); margin-top:var(--sp5); }
+  .scalebar .item{ min-width:140px; }
+  .scalebar .item .v{ font-family:var(--font-mono); font-size:1.5rem; font-weight:600; }
+  .scalebar .item .l{ font-family:var(--font-mono); font-size:.7rem; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-faint); margin-top:2px; }
+
+  /* ---------- timeline mini-charts ---------- */
+  .trend-grid{ display:grid; grid-template-columns:1fr 1fr; gap:var(--sp5); margin-top:var(--sp6); }
+  @media (max-width:760px){ .trend-grid{ grid-template-columns:1fr; } }
+  .trend-card{ background:var(--paper-raised); border:1px solid var(--line); padding:var(--sp5); }
+  .trend-card h4{ font-family:var(--font-mono); font-size:.78rem; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-soft); font-weight:600; margin-bottom:var(--sp4); }
+  .trend-card svg{ width:100%; height:120px; display:block; overflow:visible; }
+  .trend-vals{ display:flex; justify-content:space-between; font-family:var(--font-mono); font-weight:700; font-size:1rem; margin-bottom:6px; }
+  .trend-vals .arrow{ color:var(--ink-faint); font-weight:400; padding:0 6px; }
+  .trend-foot{ display:flex; justify-content:space-between; margin-top:var(--sp3); font-family:var(--font-mono); font-size:.68rem; color:var(--ink-faint); }
+
+  /* ---------- generic table ---------- */
+  .tablewrap{ overflow-x:auto; margin-top:var(--sp5); border:1px solid var(--line); }
+  table{ width:100%; border-collapse:collapse; font-size:.88rem; min-width:640px; }
+  table caption{ text-align:left; padding:var(--sp3) var(--sp4); font-family:var(--font-mono); font-size:.72rem; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.04em; border-bottom:1px solid var(--line); }
+  th,td{ text-align:left; padding:10px 14px; border-bottom:1px solid var(--line); vertical-align:top; }
+  thead th{ font-family:var(--font-mono); font-size:.7rem; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-faint); background:var(--paper-sunken); font-weight:600; white-space:nowrap; }
+  tbody tr:last-child td{ border-bottom:none; }
+  tbody tr:hover{ background:var(--signal-soft); }
+  td.num, th.num{ font-family:var(--font-mono); text-align:right; white-space:nowrap; }
+  .tag{ display:inline-flex; align-items:center; gap:5px; font-family:var(--font-mono); font-size:.7rem; text-transform:uppercase; letter-spacing:.04em; padding:3px 7px; border-radius:2px; white-space:nowrap; }
+  .tag .dot{ width:6px; height:6px; border-radius:50%; background:currentColor; }
+  .tag.over{ color:var(--good); background:var(--good-bg); }
+  .tag.under{ color:var(--critical); background:var(--critical-bg); }
+
+  /* ---------- problem cards ---------- */
+  .problem-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line); margin-top:var(--sp6); }
+  @media (max-width:900px){ .problem-grid{ grid-template-columns:repeat(2,1fr); } }
+  @media (max-width:600px){ .problem-grid{ grid-template-columns:1fr; } }
+  .problem{ background:var(--paper-raised); padding:var(--sp4) var(--sp5); }
+  .problem .pid{ font-family:var(--font-mono); font-size:.72rem; color:var(--signal); font-weight:700; }
+  .problem h4{ font-family:var(--font-body); font-size:.98rem; font-weight:700; margin:4px 0 6px 0; }
+  .problem p{ margin:0; font-size:.86rem; color:var(--ink-soft); }
+
+  /* ---------- competitor scale chart ---------- */
+  .barchart{ margin-top:var(--sp6); display:flex; flex-direction:column; gap:var(--sp3); }
+  .bar-row{ display:grid; grid-template-columns:140px 1fr 84px; align-items:center; gap:var(--sp3); }
+  .bar-row .name{ font-size:.88rem; font-weight:600; }
+  .bar-row .name.hi{ color:var(--signal-ink); }
+  .bar-track{ height:20px; background:var(--paper-sunken); border-radius:2px; position:relative; }
+  .bar-fill{ height:100%; background:var(--ink-faint); border-radius:2px; min-width:6px; transition:filter .15s; }
+  .bar-fill.hi{ background:var(--signal); }
+  .bar-row:hover .bar-fill,.bar-row:focus-within .bar-fill{ filter:brightness(1.15); }
+  .bar-val{ font-family:var(--font-mono); font-size:.82rem; text-align:right; }
+  .chart-note{ font-size:.78rem; color:var(--ink-faint); margin-top:var(--sp2); font-family:var(--font-mono); }
+
+  /* ---------- teardown cards ---------- */
+  .teardown-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:var(--sp5); margin-top:var(--sp6); }
+  @media (max-width:900px){ .teardown-grid{ grid-template-columns:1fr; } }
+  .tcard{ background:var(--paper-raised); border:1px solid var(--line); padding:var(--sp5); display:flex; flex-direction:column; gap:var(--sp3); }
+  .tcard .thead{ display:flex; justify-content:space-between; align-items:baseline; gap:var(--sp3); }
+  .tcard .thead h3{ font-size:1.15rem; }
+  .tcard .thead .subs{ font-family:var(--font-mono); font-size:.82rem; color:var(--ink-faint); white-space:nowrap; }
+  .tcard .finding{ font-size:.92rem; color:var(--ink-soft); border-left:2px solid var(--signal); padding-left:var(--sp3); }
+  .tcard .finding b{ color:var(--ink); }
+  .tcard ul.steal{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:6px; }
+  .tcard ul.steal li{ font-size:.86rem; padding-left:16px; position:relative; }
+  .tcard ul.steal li::before{ content:"→"; position:absolute; left:0; color:var(--signal); }
+  .tcard .links{ display:flex; gap:var(--sp2); flex-wrap:wrap; margin-top:auto; padding-top:var(--sp2); }
+  .tcard .links a{ font-family:var(--font-mono); font-size:.72rem; text-decoration:none; color:var(--ink-soft); border:1px solid var(--line); padding:3px 8px; border-radius:2px; }
+  .tcard .links a:hover{ border-color:var(--signal); color:var(--signal-ink); }
+
+  /* ---------- pull quote ---------- */
+  .pullquote{ margin-top:var(--sp6); padding:var(--sp6) var(--sp7); background:var(--paper-raised); border:1px solid var(--line); border-left:3px solid var(--signal); }
+  .pullquote p.q{ font-family:var(--font-display); font-size:1.55rem; line-height:1.35; margin:0; text-wrap:balance; }
+  .pullquote .who{ margin-top:var(--sp4); font-family:var(--font-mono); font-size:.8rem; color:var(--ink-soft); }
+
+  /* ---------- format menu ---------- */
+  .fmt-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line); margin-top:var(--sp6); }
+  @media (max-width:900px){ .fmt-grid{ grid-template-columns:repeat(2,1fr); } }
+  @media (max-width:600px){ .fmt-grid{ grid-template-columns:1fr; } }
+  .fmt{ background:var(--paper-raised); padding:var(--sp5); display:flex; flex-direction:column; gap:var(--sp2); }
+  .fmt .fid{ font-family:var(--font-mono); font-size:.72rem; color:var(--signal); font-weight:700; }
+  .fmt h4{ font-size:1.02rem; }
+  .fmt .meta{ font-family:var(--font-mono); font-size:.74rem; color:var(--ink-faint); }
+  .fmt p{ font-size:.86rem; color:var(--ink-soft); margin:0; }
+  .fmt .modeled{ margin-top:auto; padding-top:var(--sp2); font-size:.76rem; color:var(--ink-soft); border-top:1px dashed var(--line); }
+  .fmt .modeled b{ color:var(--ink); }
+
+  /* ---------- title formulas ---------- */
+  .formula-list{ list-style:none; margin:var(--sp5) 0 0 0; padding:0; display:flex; flex-direction:column; gap:var(--sp3); }
+  .formula-list li{ display:grid; grid-template-columns:170px 1fr; gap:var(--sp4); padding:var(--sp3) 0; border-bottom:1px solid var(--line); align-items:baseline; }
+  .formula-list li:last-child{ border-bottom:none; }
+  .formula-list .fname{ font-family:var(--font-mono); font-size:.78rem; color:var(--signal-ink); font-weight:700; }
+  .formula-list .fex{ font-size:.92rem; }
+  .formula-list .fex em{ color:var(--ink-soft); font-style:normal; }
+
+  /* ---------- weekly rhythm ---------- */
+  .week{ display:grid; grid-template-columns:repeat(7,1fr); gap:1px; background:var(--line); border:1px solid var(--line); margin-top:var(--sp6); }
+  @media (max-width:700px){ .week{ grid-template-columns:repeat(2,1fr); } }
+  @media (max-width:420px){ .week{ grid-template-columns:1fr; } }
+  .day{ background:var(--paper-raised); min-height:92px; padding:var(--sp3); display:flex; flex-direction:column; gap:6px; min-width:0; }
+  .day .dname{ font-family:var(--font-mono); font-size:.68rem; text-transform:uppercase; color:var(--ink-faint); letter-spacing:.04em; }
+  .day .chip{ font-size:.72rem; padding:3px 6px; border-radius:2px; background:var(--signal-soft); color:var(--signal-ink); font-weight:600; align-self:flex-start; }
+  .day .chip.alt{ background:var(--paper-sunken); color:var(--ink-soft); }
+
+  /* ---------- rollout timeline ---------- */
+  .rollout{ display:grid; grid-template-columns:repeat(3,1fr); gap:var(--sp5); margin-top:var(--sp6); }
+  @media (max-width:860px){ .rollout{ grid-template-columns:1fr; } }
+  .stage{ background:var(--paper-raised); border:1px solid var(--line); }
+  .stage .sh{ padding:var(--sp4) var(--sp5); border-bottom:1px solid var(--line); background:var(--paper-sunken); }
+  .stage .sh .days{ font-family:var(--font-mono); font-size:.72rem; color:var(--signal-ink); font-weight:700; letter-spacing:.03em; }
+  .stage .sh h4{ font-size:1.05rem; margin-top:4px; }
+  .stage ol{ margin:0; padding:var(--sp4) var(--sp5); list-style:none; display:flex; flex-direction:column; gap:var(--sp3); }
+  .stage li{ font-size:.86rem; padding-left:22px; position:relative; color:var(--ink-soft); }
+  .stage li::before{ content:counter(item); counter-increment:item; position:absolute; left:0; top:0; font-family:var(--font-mono); font-size:.68rem; color:var(--signal); font-weight:700; }
+  .stage ol{ counter-reset:item; }
+
+  /* ---------- rubric ---------- */
+  .rubric-item{ display:grid; grid-template-columns:220px 1fr; gap:var(--sp5); padding:var(--sp5) 0; border-bottom:1px solid var(--line); }
+  @media (max-width:760px){ .rubric-item{ grid-template-columns:1fr; } }
+  .rubric-item:last-child{ border-bottom:none; }
+  .rubric-left h4{ font-size:1rem; margin-bottom:6px; }
+  .weight-track{ height:6px; background:var(--paper-sunken); border-radius:3px; overflow:hidden; margin-top:6px; width:140px; }
+  .weight-fill{ height:100%; background:var(--signal); }
+  .weight-num{ font-family:var(--font-mono); font-size:.78rem; color:var(--ink-soft); margin-top:4px; display:block; }
+  .anchor-scale{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:var(--sp4); }
+  @media (max-width:600px){ .anchor-scale{ grid-template-columns:1fr; } }
+  .anchor{ font-size:.82rem; color:var(--ink-soft); border-top:2px solid var(--line); padding-top:8px; }
+  .anchor .n{ font-family:var(--font-mono); font-weight:700; color:var(--ink); margin-right:4px; }
+  .anchor.lo{ border-top-color:var(--critical); }
+  .anchor.mid{ border-top-color:var(--warning); }
+  .anchor.hi{ border-top-color:var(--good); }
+  .measures{ font-size:.86rem; color:var(--ink-faint); margin-top:2px; }
+
+  .threshold-scale{ margin-top:var(--sp6); }
+  .tband{ display:flex; height:36px; border-radius:3px; overflow:hidden; border:1px solid var(--line); }
+  .tband > div{ display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:.78rem; font-weight:700; color:#fff; }
+  .tband .kill{ background:var(--critical); flex:2; }
+  .tband .rework{ background:var(--warning); flex:1; }
+  .tband .go{ background:var(--good); flex:1; }
+  .tband-labels{ display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:.7rem; color:var(--ink-faint); margin-top:6px; }
+
+  .flag-grid{ display:grid; grid-template-columns:1fr 1fr; gap:var(--sp5); margin-top:var(--sp6); }
+  @media (max-width:760px){ .flag-grid{ grid-template-columns:1fr; } }
+  .flagbox{ padding:var(--sp5); border:1px solid var(--line); }
+  .flagbox.red{ background:var(--critical-bg); border-color:rgba(193,68,46,.3); }
+  .flagbox.green{ background:var(--good-bg); border-color:rgba(47,143,85,.3); }
+  .flagbox h4{ font-family:var(--font-mono); font-size:.78rem; text-transform:uppercase; letter-spacing:.05em; margin-bottom:var(--sp3); }
+  .flagbox.red h4{ color:var(--critical); }
+  .flagbox.green h4{ color:var(--good); }
+  .flagbox ul{ margin:0; padding-left:18px; display:flex; flex-direction:column; gap:6px; }
+  .flagbox li{ font-size:.86rem; color:var(--ink-soft); }
+
+  /* ---------- ranked list ---------- */
+  .ranked{ list-style:none; margin:var(--sp6) 0 0 0; padding:0; display:flex; flex-direction:column; }
+  .ranked li{ display:grid; grid-template-columns:44px 1fr; gap:var(--sp4); padding:var(--sp4) 0; border-bottom:1px solid var(--line); }
+  .ranked li:last-child{ border-bottom:none; }
+  .ranked .rank{ font-family:var(--font-mono); font-size:1.3rem; font-weight:700; color:var(--signal); }
+  .ranked .rtext{ font-size:.95rem; }
+  .ranked .rtext .ev{ display:block; font-size:.8rem; color:var(--ink-faint); margin-top:3px; }
+
+  /* ---------- appendix ---------- */
+  details.chan{ border:1px solid var(--line); margin-top:var(--sp3); background:var(--paper-raised); }
+  details.chan summary{ padding:var(--sp3) var(--sp4); cursor:pointer; font-weight:600; font-size:.92rem; list-style:none; display:flex; justify-content:space-between; align-items:center; }
+  details.chan summary::-webkit-details-marker{ display:none; }
+  details.chan summary .arrow{ font-family:var(--font-mono); color:var(--ink-faint); transition:transform .15s; }
+  details.chan[open] summary .arrow{ transform:rotate(90deg); }
+  details.chan .body{ padding:0 var(--sp4) var(--sp4) var(--sp4); }
+  .vid-row{ display:flex; justify-content:space-between; gap:var(--sp3); padding:7px 0; border-top:1px solid var(--line); font-size:.86rem; }
+  .vid-row a{ text-decoration:none; }
+  .vid-row .v{ font-family:var(--font-mono); color:var(--ink-soft); white-space:nowrap; }
+
+  footer{ padding:var(--sp7) 0 var(--sp8); }
+  footer .prose{ color:var(--ink-faint); font-size:.84rem; }
+  footer code{ font-family:var(--font-mono); background:var(--paper-sunken); padding:1px 5px; border-radius:2px; }
+
+  @media (prefers-reduced-motion:reduce){ *{ transition:none !important; scroll-behavior:auto !important; } }
+</style>
+
+<header class="masthead">
+  <div class="wrap masthead-inner">
+    <div class="brand">
+      <span class="mark">CATO<span class="slash">/</span>YOUTUBE</span>
+      <span class="tag">CHANNEL REVAMP AUDIT · V1.0 · JUL 2026</span>
+    </div>
+    <nav class="jump" aria-label="Section navigation">
+      <a href="#summary">Summary</a>
+      <a href="#audit">Audit</a>
+      <a href="#competitors">Competitors</a>
+      <a href="#plan">Plan</a>
+      <a href="#rubric">Rubric</a>
+      <a href="#ranked">Ranked</a>
+      <a href="#appendix">Appendix</a>
+    </nav>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle color theme">
+      <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v3M12 19v3M4.2 4.2l2 2M17.8 17.8l2 2M2 12h3M19 12h3M4.2 19.8l2-2M17.8 6.2l2-2"></path></svg>
+      <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"></path></svg>
+    </button>
+  </div>
+</header>
+
+<div id="tooltip" role="status" hidden></div>
+
+<main>
+
+  <!-- ============ SUMMARY ============ -->
+  <section id="summary" class="hero wrap">
+    <div class="eyebrow"><span>Executive Summary</span><span class="rule"></span></div>
+    <span class="status-chip"><span class="status-dot"></span>Channel status: stalled</span>
+    <h1>106,000 subscribers. Zero net growth last month.</h1>
+    <p class="lede">Cato's channel is an institutional archive with a dead pulse — a production system built to file every event and podcast under its own program name, for an audience of nobody in particular. The catalog already contains the fix: every one of its four accidental hits follows the exact packaging formula that Reason TV, Vox, Dad Saves America, The Verge, and Good Work use on purpose. This document diagnoses the gap and specifies the repeatable formats, packaging rules, and weekly triage rubric to close it.</p>
+
+    <div class="stat-grid four" role="group" aria-label="Channel headline metrics">
+      <div class="stat">
+        <span class="label">Subscribers</span>
+        <span class="value tabular">106K</span>
+        <span class="ctx">2,302 videos since Nov 2008</span>
+      </div>
+      <div class="stat">
+        <span class="label">30-day net new subs</span>
+        <span class="value tabular critical">0</span>
+        <span class="ctx">against 15 uploads in the same window</span>
+      </div>
+      <div class="stat">
+        <span class="label">Lifetime views</span>
+        <span class="value tabular">14.7M</span>
+        <span class="ctx">~1,421 views/day currently</span>
+      </div>
+      <div class="stat">
+        <span class="label">Views from top 3 videos</span>
+        <span class="value tabular">~12%</span>
+        <span class="ctx">from 0.13% of all uploads</span>
+      </div>
+    </div>
+
+    <div class="eyebrow" style="margin-top:var(--sp7);"><span>The thesis, in one comparison</span><span class="rule"></span></div>
+    <p class="section-sub">Same conference. Same upload day. Same production team. The only variable that changed between these pairs was packaging — and it moved the outcome by two orders of magnitude.</p>
+
+    <div class="gapgrid">
+      <div class="gapcard">
+        <div class="gaptitle">Cato's own 2024 conference: <b>a head of state</b> vs. <b>a tech CEO</b></div>
+        <div class="gaprow" tabindex="0" data-tip="Posted 9 weeks after the event, Spanish audio only, under its conference-program title.">
+          <span class="who">Milei keynote</span>
+          <div class="gapbar-track"><div class="gapbar-fill" style="width:4%"></div></div>
+          <span class="gapval tabular">1,300</span>
+        </div>
+        <div class="gaprow" tabindex="0" data-tip="Posted promptly, titled name-first: 'A Conversation with Elon Musk.'">
+          <span class="who">Musk conversation</span>
+          <div class="gapbar-track"><div class="gapbar-fill hot" style="width:100%"></div></div>
+          <span class="gapval tabular">333,200</span>
+        </div>
+        <div class="gapmult"><div class="n">~250×</div><div class="d">views gap — packaging is the entire difference</div></div>
+      </div>
+      <div class="gapcard">
+        <div class="gaptitle">The Verge, same reviewer, same week: <b>podcast</b> vs. <b>packaged hands-on</b></div>
+        <div class="gaprow" tabindex="0" data-tip="84-minute Vergecast episode covering the same product on the same channel.">
+          <span class="who">Vergecast episode</span>
+          <div class="gapbar-track"><div class="gapbar-fill" style="width:4%"></div></div>
+          <span class="gapval tabular">17,800</span>
+        </div>
+        <div class="gaprow" tabindex="0" data-tip="7:35 packaged hands-on with a cold open, chapters, and a first-person title.">
+          <span class="who">Ray-Ban Display hands-on</span>
+          <div class="gapbar-track"><div class="gapbar-fill hot" style="width:100%"></div></div>
+          <span class="gapval tabular">889,800</span>
+        </div>
+        <div class="gapmult"><div class="n">~50×</div><div class="d">views gap — same people, same topic, different package</div></div>
+      </div>
+    </div>
+
+    <div class="eyebrow" style="margin-top:var(--sp7);"><span>Top 5 recommendations by impact</span><span class="rule"></span></div>
+    <ol class="mini-reco">
+      <li><span class="idx">01</span><span>Stop posting raw event recordings — install the event-to-interview pipeline (F1).</span></li>
+      <li><span class="idx">02</span><span>Retitle everything for YouTube — no video ships under its event or paper title, ever.</span></li>
+      <li><span class="idx">03</span><span>Mine the channel's own proven veins as franchises (Know Your Rights, 100 Cases).</span></li>
+      <li><span class="idx">04</span><span>Launch a monthly flagship question-explainer with a named host persona.</span></li>
+      <li><span class="idx">05</span><span>Fix channel hygiene — orphan channel, categories, upload rhythm — at zero cost.</span></li>
+    </ol>
+    <p style="margin-top:var(--sp3);"><a href="#ranked" class="mono" style="font-size:.85rem;">→ see the full ranked list of 10</a></p>
+  </section>
+
+  <!-- ============ PHASE 1: AUDIT ============ -->
+  <section id="audit" class="wrap">
+    <div class="section-head">
+      <span class="num">PHASE 1</span>
+      <h2>The Current Channel</h2>
+    </div>
+    <p class="section-sub prose">youtube.com/<b>@catoinstitutevideo</b> — note the handle: not @catoinstitute. A second, abandoned channel ("catovideo1," 924 subs, live since 2009) still intercepts brand searches. All figures verified via Social Blade / SPEAKRJ, July 20, 2026, unless marked otherwise.</p>
+
+    <div class="scalebar">
+      <div class="item"><div class="v tabular">106K</div><div class="l">Subscribers</div></div>
+      <div class="item"><div class="v tabular">14.70M</div><div class="l">Total views</div></div>
+      <div class="item"><div class="v tabular">2,302</div><div class="l">Videos</div></div>
+      <div class="item"><div class="v tabular">2008</div><div class="l">Channel created</div></div>
+      <div class="item"><div class="v tabular">29 / 4</div><div class="l">Avg likes / comments</div></div>
+    </div>
+
+    <div class="trend-grid">
+      <div class="trend-card">
+        <h4>Subscribers — 2022 → 2026</h4>
+        <div class="trend-vals"><span>86.3K</span><span class="arrow">→</span><span>106K</span></div>
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-label="Subscriber growth line chart, flattening from 2022 to 2026">
+          <polygon points="0,79 33.3,20 66.6,16.7 100,13.3 100,100 0,100" fill="var(--signal)" opacity="0.12"></polygon>
+          <polyline points="0,79 33.3,20 66.6,16.7 100,13.3" fill="none" stroke="var(--signal)" stroke-width="2"></polyline>
+          <circle cx="0" cy="79" r="2.6" fill="var(--signal)"></circle>
+          <circle cx="33.3" cy="20" r="2.6" fill="var(--signal)"></circle>
+          <circle cx="66.6" cy="16.7" r="2.6" fill="var(--signal)"></circle>
+          <circle cx="100" cy="13.3" r="2.6" fill="var(--signal)"></circle>
+        </svg>
+        <div class="trend-foot"><span>OCT 2022</span><span>APR 2025</span><span>NOV 2025</span><span>JUN 2026</span></div>
+      </div>
+      <div class="trend-card">
+        <h4>Total views (M) — 2022 → 2026</h4>
+        <div class="trend-vals"><span>10.89M</span><span class="arrow">→</span><span>14.66M</span></div>
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-label="Total views line chart, flattening from 2022 to 2026">
+          <polygon points="0,82.2 33.3,20.6 66.6,13.4 100,6.8 100,100 0,100" fill="var(--signal)" opacity="0.12"></polygon>
+          <polyline points="0,82.2 33.3,20.6 66.6,13.4 100,6.8" fill="none" stroke="var(--signal)" stroke-width="2"></polyline>
+          <circle cx="0" cy="82.2" r="2.6" fill="var(--signal)"></circle>
+          <circle cx="33.3" cy="20.6" r="2.6" fill="var(--signal)"></circle>
+          <circle cx="66.6" cy="13.4" r="2.6" fill="var(--signal)"></circle>
+          <circle cx="100" cy="6.8" r="2.6" fill="var(--signal)"></circle>
+        </svg>
+        <div class="trend-foot"><span>OCT 2022</span><span>APR 2025</span><span>NOV 2025</span><span>JUN 2026</span></div>
+      </div>
+    </div>
+    <p class="chart-note">+635 videos produced between these points bought +19.7K subs and +3.78M views — a plateau, not a curve.</p>
+
+    <div class="eyebrow" style="margin-top:var(--sp7);"><span>Engagement outliers</span><span class="rule"></span></div>
+    <div class="tablewrap">
+      <table>
+        <caption>Verified over- and under-performers vs. the channel norm</caption>
+        <thead><tr><th>Video</th><th>Status</th><th class="num">Views</th><th>Why (hypothesis)</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><a href="https://www.youtube.com/watch?v=-FENubmZGj8" target="_blank" rel="noopener">You Have the Right to Remain Innocent</a></td>
+            <td><span class="tag over"><span class="dot"></span>Over</span></td>
+            <td class="num tabular">835.7K</td>
+            <td>Evergreen search demand, personal-utility topic, charismatic single speaker (34:47)</td>
+          </tr>
+          <tr>
+            <td><a href="https://www.youtube.com/watch?v=_f-AqXVjOGU" target="_blank" rel="noopener">100 Supreme Court Cases Everyone Should Know</a></td>
+            <td><span class="tag over"><span class="dot"></span>Over</span></td>
+            <td class="num tabular">526.0K</td>
+            <td>Title is a law-student study query, not an event name — wins even at 91 minutes</td>
+          </tr>
+          <tr>
+            <td><a href="https://www.youtube.com/watch?v=EtQqAL9apYA" target="_blank" rel="noopener">A Conversation with Elon Musk</a></td>
+            <td><span class="tag over"><span class="dot"></span>Over</span></td>
+            <td class="num tabular">333.2K</td>
+            <td>Celebrity name leads the title — Cato's biggest 2020s hit</td>
+          </tr>
+          <tr>
+            <td><a href="https://www.youtube.com/watch?v=IoGp9vgeGRc" target="_blank" rel="noopener">How Sweden is Responding to the Coronavirus</a></td>
+            <td><span class="tag over"><span class="dot"></span>Over</span></td>
+            <td class="num tabular">192.4K</td>
+            <td>Timely news hook + contrarian angle + one scholar + under 20 minutes</td>
+          </tr>
+          <tr>
+            <td><a href="https://www.youtube.com/watch?v=gmOiybHc2wk" target="_blank" rel="noopener">Javier Milei — Keynote Address (Original Audio)</a></td>
+            <td><span class="tag under"><span class="dot"></span>Under</span></td>
+            <td class="num tabular">1.3K</td>
+            <td>Posted 9 weeks late, Spanish-audio-only, filed under its conference title</td>
+          </tr>
+          <tr>
+            <td><a href="https://www.youtube.com/watch?v=pcYsiMVZ5s8" target="_blank" rel="noopener">Trump v. Barbara: Birthright Citizenship</a></td>
+            <td><span class="tag under"><span class="dot"></span>Under</span></td>
+            <td class="num tabular">564</td>
+            <td>Red-hot SCOTUS topic delivered as a webinar recording, miscategorized as Entertainment</td>
+          </tr>
+          <tr>
+            <td><a href="https://www.youtube.com/watch?v=V9qtPDHAGM8" target="_blank" rel="noopener">Student loans — explainer #shorts</a></td>
+            <td><span class="tag under"><span class="dot"></span>Under</span></td>
+            <td class="num tabular">757</td>
+            <td>Talking-head podcast fragment; hook is a statistic, not a stake</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="eyebrow" style="margin-top:var(--sp7);"><span>Seven problems beyond the obvious</span><span class="rule"></span></div>
+    <div class="problem-grid">
+      <div class="problem"><span class="pid">P1</span><h4>Growth is already dead</h4><p>Zero net subscribers in 30 days despite steady uploads — a conversion failure, not a volume one.</p></div>
+      <div class="problem"><span class="pid">P2</span><h4>Fragmented identity</h4><p>An abandoned duplicate channel and legacy URLs intercept brand searches before viewers reach the real one.</p></div>
+      <div class="problem"><span class="pid">P3</span><h4>Broken metadata</h4><p>A SCOTUS forum filed under "Entertainment"; threadbare tags; foreign-language keynotes with no subtitles.</p></div>
+      <div class="problem"><span class="pid">P4</span><h4>Hits never get sequels</h4><p>Four breakout videos, zero franchises built on any of them. Hits are treated as anomalies, not R&amp;D.</p></div>
+      <div class="problem"><span class="pid">P5</span><h4>Batch-dump uploading</h4><p>Multiple videos posted the same day split the impression budget; periodic deletions erase watch-history equity.</p></div>
+      <div class="problem"><span class="pid">P6</span><h4>News windows forfeited</h4><p>Milei's keynote shipped 9 weeks late; Reuters and Yahoo Finance out-viewed Cato's own upload of its own event.</p></div>
+      <div class="problem"><span class="pid">P7</span><h4>Community signal is dead</h4><p>29 likes / 4 comments on average — despite proof this audience engages heavily when given the chance.</p></div>
+    </div>
+  </section>
+
+  <!-- ============ PHASE 2: COMPETITORS ============ -->
+  <section id="competitors" class="wrap">
+    <div class="section-head">
+      <span class="num">PHASE 2</span>
+      <h2>Competitive Teardown</h2>
+    </div>
+    <p class="section-sub prose">Reason TV is the primary benchmark — closest peer in worldview and subject matter. Vox, Dad Saves America, The Verge, and Good Work each contribute one transferable craft: explainer structure, tone and distribution, production and personality, and making dry subjects watchable.</p>
+
+    <div class="eyebrow" style="margin-top:var(--sp6);"><span>Subscriber scale (log scale)</span><span class="rule"></span></div>
+    <div class="barchart" role="group" aria-label="Subscriber counts across six channels, log scale">
+      <div class="bar-row" tabindex="0" data-tip="12.7M subscribers, 3.82B lifetime views. Growth now flat; library still earns 300–600K views/day.">
+        <span class="name">Vox</span>
+        <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
+        <span class="bar-val tabular">12.7M</span>
+      </div>
+      <div class="bar-row" tabindex="0" data-tip="3.51M subscribers, 1.14B lifetime views. Packaged videos reliably pull 100K–900K.">
+        <span class="name">The Verge</span>
+        <div class="bar-track"><div class="bar-fill" style="width:73%"></div></div>
+        <span class="bar-val tabular">3.51M</span>
+      </div>
+      <div class="bar-row" tabindex="0" data-tip="1.63M subscribers from only 390 videos — the efficiency benchmark of this study. ~3-person team.">
+        <span class="name">Good Work</span>
+        <div class="bar-track"><div class="bar-fill" style="width:57%"></div></div>
+        <span class="bar-val tabular">1.63M</span>
+      </div>
+      <div class="bar-row" tabindex="0" data-tip="1.39M subscribers. Grew +500K subs / +240M views in 2.5 years alongside doubled output.">
+        <span class="name">Reason TV</span>
+        <div class="bar-track"><div class="bar-fill" style="width:54%"></div></div>
+        <span class="bar-val tabular">1.39M</span>
+      </div>
+      <div class="bar-row" tabindex="0" data-tip="496K subscribers from just two anchor recordings per week plus a clip pipeline.">
+        <span class="name">Dad Saves America</span>
+        <div class="bar-track"><div class="bar-fill" style="width:32%"></div></div>
+        <span class="bar-val tabular">496K</span>
+      </div>
+      <div class="bar-row" tabindex="0" data-tip="106K subscribers, zero net growth in the last 30 days. This is the channel this document is about.">
+        <span class="name hi">Cato Institute</span>
+        <div class="bar-track"><div class="bar-fill hi" style="width:3%"></div></div>
+        <span class="bar-val tabular">106K</span>
+      </div>
+    </div>
+    <p class="chart-note">Bar length is log-scaled — Cato's true bar is a hairline at this scale. That gap is the size of the opportunity, not a verdict on the mission.</p>
+
+    <div class="teardown-grid">
+      <div class="tcard">
+        <div class="thead"><h3>Reason TV <span class="mono" style="font-size:.7rem;color:var(--ink-faint);">— primary benchmark</span></h3><span class="subs">1.39M subs</span></div>
+        <p class="finding">Its two biggest videos ever are <b>conference footage</b> — John Cleese (2.4M) and Matt Taibbi (1.6M) — packaged as single-guest interviews with scripted cold opens, never posted as raw panels.</p>
+        <ul class="steal">
+          <li>Event-harvested interviews, one guest only, never the raw panel</li>
+          <li>Rigid-formula comedy franchise about policy failure (22+ volumes)</li>
+          <li>Titles for YouTube differ from magazine headlines, by policy</li>
+        </ul>
+        <div class="links">
+          <a href="https://www.youtube.com/watch?v=mBf6kJIbXLg" target="_blank" rel="noopener">Cleese · 2.4M</a>
+          <a href="https://www.youtube.com/watch?v=Kfyw3xA2hv0" target="_blank" rel="noopener">Taibbi · 1.6M</a>
+        </div>
+      </div>
+      <div class="tcard">
+        <div class="thead"><h3>Vox</h3><span class="subs">12.7M subs</span></div>
+        <p class="finding">Opens on a bare fact, not the institution: <b>"435. That's how many people are in the House of Representatives…"</b> — an apportionment-reform explainer at 671.8K views, the most Cato-adjacent hit in this study.</p>
+        <ul class="steal">
+          <li>Cold-open on a number or anomaly, zero channel branding first</li>
+          <li>Package policy as the answer to a felt consumer problem</li>
+          <li>One map-driven series with a fixed, recognizable visual spine</li>
+        </ul>
+        <div class="links">
+          <a href="https://www.youtube.com/watch?v=KhQGHY44XPM" target="_blank" rel="noopener">House apportionment · 671.8K</a>
+          <a href="https://www.youtube.com/watch?v=NUMa0QkPzns" target="_blank" rel="noopener">Phones essay · 3.2M</a>
+        </div>
+      </div>
+      <div class="tcard">
+        <div class="thead"><h3>Dad Saves America</h3><span class="subs">496K subs</span></div>
+        <p class="finding">7–12 minute named-moment clips <b>outperform their own parent episodes</b> — a Haidt clip did 170.3K against its 51-minute parent's 144.5K.</p>
+        <ul class="steal">
+          <li>Human-stakes lens ("what does this mean for my kids") as brand identity</li>
+          <li>Clip pipeline before chasing Shorts — 3–5 clips per anchor recording</li>
+          <li>A public "check my sources" page on every essay — a trust device only a real institution can credibly run</li>
+        </ul>
+        <div class="links">
+          <a href="https://www.youtube.com/watch?v=zG3cvQQmUCk" target="_blank" rel="noopener">Haidt clip · 170.3K</a>
+          <a href="https://www.youtube.com/watch?v=dU-TA0O0lc0" target="_blank" rel="noopener">Haidt full · 144.5K</a>
+        </div>
+      </div>
+      <div class="tcard">
+        <div class="thead"><h3>The Verge</h3><span class="subs">3.51M subs</span></div>
+        <p class="finding">Same expert, same topic, same channel: an 84-minute podcast got 17.8K views; the 7:35 packaged hands-on got 889.8K. <b>The byline is the host.</b></p>
+        <ul class="steal">
+          <li>The scholar who did the work presents it — packaged, not from the podium</li>
+          <li>Access/urgency cold opens: "I've only got 24 hours with this…"</li>
+          <li>One codified thumbnail/type/color system across every video</li>
+        </ul>
+        <div class="links">
+          <a href="https://www.youtube.com/watch?v=5cVGKvl7Oek" target="_blank" rel="noopener">Ray-Ban hands-on · 889.8K</a>
+          <a href="https://www.youtube.com/watch?v=DA7brSw1klM" target="_blank" rel="noopener">Vergecast · 17.8K</a>
+        </div>
+      </div>
+    </div>
+    <div class="teardown-grid" style="margin-top:0;">
+      <div class="tcard">
+        <div class="thead"><h3>Good Work</h3><span class="subs">1.63M subs</span></div>
+        <p class="finding">"Why can politicians trade stocks?" — congressional-ethics policy, Cato-adjacent subject matter — <b>1.2M views</b> with a 3-person team, because the title is a question a 24-year-old would actually ask.</p>
+        <ul class="steal">
+          <li>Question = title = thumbnail = cold open = structure, always</li>
+          <li>Straight script first (scholars), comedy punch-up second (host) — substance never traded away</li>
+          <li>Host plays faux-naive interrogator; scholars stay the straight man, never the comedian</li>
+        </ul>
+        <div class="links">
+          <a href="https://www.youtube.com/watch?v=vT-u-SPj4_c" target="_blank" rel="noopener">Politicians' stocks · 1.2M</a>
+          <a href="https://www.youtube.com/watch?v=M_leNmT7xvM" target="_blank" rel="noopener">Private equity · 3.0M</a>
+        </div>
+      </div>
+      <div class="tcard" style="justify-content:center;">
+        <div class="thead"><h3 style="color:var(--ink-soft);">Cross-benchmark check</h3></div>
+        <p class="finding">The niche is not view-capped: Reason's Soho Forum debate holds <b>8.7M views</b>; Acton Institute's documentary <i>The Hong Konger</i> holds <b>5.1M</b>. And Cato's own Fed-Chair-Powell event drew more views on <b>Yahoo Finance's</b> upload than on Cato's own channel.</p>
+        <div class="links">
+          <a href="https://www.youtube.com/watch?v=YJQSuUZdcV4" target="_blank" rel="noopener">Soho Forum · 8.7M</a>
+          <a href="https://www.youtube.com/watch?v=bRkuv-fOV7k" target="_blank" rel="noopener">Hong Konger · 5.1M</a>
+          <a href="https://www.youtube.com/watch?v=5lk7w3OVZ_U" target="_blank" rel="noopener">Powell via Yahoo · 30.9K</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="eyebrow" style="margin-top:var(--sp7);"><span>Full comparison</span><span class="rule"></span></div>
+    <div class="tablewrap">
+      <table>
+        <caption>Format / length / cadence / packaging / production across all six channels</caption>
+        <thead><tr><th>Channel</th><th>Core formats</th><th>Length norms</th><th>Cadence</th><th>Packaging</th><th>Production tier</th></tr></thead>
+        <tbody>
+          <tr><td><b>Reason TV</b><br><span class="mono" style="font-size:.72rem;color:var(--ink-faint);">1.39M subs</span></td><td>Comedy franchise, essays/debunks, docs, event-harvested interviews</td><td>1:40–3:10 comedy; 8–10 min essays; 25–60+ min docs/interviews</td><td>~5 long-form/wk + Shorts bench</td><td>Claim+payoff &amp; name+conflict titles; retitled for YouTube</td><td>Mid — "premium look on a budget"</td></tr>
+          <tr><td><b>Vox</b><br><span class="mono" style="font-size:.72rem;color:var(--ink-faint);">12.7M subs</span></td><td>Signature explainers, map series, named series, quick reporter takes</td><td>8–13 min flagships; 1–3 min quick takes</td><td>~50 uploads/mo; ~weekly flagship</td><td>"Why…"/", explained"/grievance titles; house design system</td><td>Premium editorial, 6-wk cycles</td></tr>
+          <tr><td><b>Dad Saves America</b><br><span class="mono" style="font-size:.72rem;color:var(--ink-faint);">496K subs</span></td><td>Weekly interview + weekly essay → clips + Shorts + podcast twin</td><td>1–2.5 hr anchors; 7–12 min clips</td><td>~36 uploads/mo from 2 anchor shoots</td><td>Two-sentence claim+kicker titles; sources page</td><td>Professional studio, lightly cut</td></tr>
+          <tr><td><b>The Verge</b><br><span class="mono" style="font-size:.72rem;color:var(--ink-faint);">3.51M subs</span></td><td>Reviews, hands-ons, field docs, named host series</td><td>3–8 min hands-ons; 10–17 min reviews</td><td>~91 uploads/mo (mostly Shorts/pods)</td><td>Byline-host first-person titles; one design system</td><td>Top-tier editorial (Webby-winning)</td></tr>
+          <tr><td><b>Good Work</b><br><span class="mono" style="font-size:.72rem;color:var(--ink-faint);">1.63M subs</span></td><td>One monthly comedic investigation + original Shorts</td><td>11–20 min flagships; 45–113 sec Shorts</td><td>~1 flagship/mo + 2–4 Shorts/wk</td><td>Dinner-table-question titles; A/B/C tested</td><td>"Premium scrappy," 3-person team</td></tr>
+          <tr style="background:var(--signal-soft);"><td><b>Cato — today</b></td><td>Raw event/forum recordings, mirrored podcasts, podcast-clip Shorts</td><td>Bimodal: &lt;2 min Shorts; 60–95 min raw events</td><td>15–27/mo, lumpy batch-dumps + deletions</td><td>Event-program titles verbatim; zero-hook openings</td><td>Institutional AV capture</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ PHASE 3: PLAN ============ -->
+  <section id="plan" class="wrap">
+    <div class="section-head">
+      <span class="num">PHASE 3</span>
+      <h2>The Revamp Plan</h2>
+    </div>
+
+    <div class="pullquote">
+      <p class="q">"We read the bill, ran the numbers, and talked to the people it affects — here's what government policy actually does."</p>
+      <div class="who">CHANNEL PROMISE · target viewer: a curious 25–45 professional who watches Vox and Good Work, skeptical of both parties, willing to watch 12 minutes on zoning if it's packaged as a question they'd actually ask</div>
+    </div>
+
+    <div class="eyebrow" style="margin-top:var(--sp7);"><span>Format menu — six repeatable shows</span><span class="rule"></span></div>
+    <div class="fmt-grid">
+      <div class="fmt"><span class="fid">F1</span><h4>The Cato Interview</h4><span class="meta">30–50 min + 3–5 clips · every event, within 2 weeks</span><p>Single guest only, never the raw panel. Scripted 60–90s cold open, conflict/name-first title, full chapters.</p><div class="modeled">Modeled on <b>Reason TV</b> — Cleese 2.4M, Taibbi 1.6M</div></div>
+      <div class="fmt"><span class="fid">F2</span><h4>The flagship question explainer</h4><span class="meta">10–15 min · monthly</span><p>Dinner-table question = title = thumbnail = cold open = structure. Straight script by scholars first, host punch-up second.</p><div class="modeled">Modeled on <b>Good Work</b> — 1.2M on congressional ethics</div></div>
+      <div class="fmt"><span class="fid">F3</span><h4>The Receipts</h4><span class="meta">8–10 min · 1–2/month, pegged to viral claims</span><p>Open on the viral claim in its own author's words, rebut with primary-source data, publish the sources page.</p><div class="modeled">Modeled on <b>Reason TV</b> — Great Reset essay, 1.5M</div></div>
+      <div class="fmt"><span class="fid">F4</span><h4>Know Your Rights</h4><span class="meta">15–35 min + Shorts · quarterly flagship</span><p>One right or scenario per episode — police stops, IRS audits, property seizures. Single charismatic presenter, utility titles.</p><div class="modeled">Modeled on <b>Cato's own</b> Duane video — 835.7K, never sequeled</div></div>
+      <div class="fmt"><span class="fid">F5</span><h4>Scholar quick-takes</h4><span class="meta">90 sec – 3 min · 1–3/week as news allows</span><p>The scholar who wrote the study reacts within 48–72 hours. Access/urgency cold open, links the standing explainer.</p><div class="modeled">Modeled on <b>The Verge</b> — 1.7M on urgency openings</div></div>
+      <div class="fmt"><span class="fid">F6</span><h4>Original Shorts doctrine</h4><span class="meta">30–90 sec · 2–4/week</span><p>Written for vertical — one stake, not a podcast fragment. News-reactive Shorts link back to evergreen longform.</p><div class="modeled">Modeled on <b>Good Work</b> — 859K on an original Short</div></div>
+    </div>
+
+    <div class="eyebrow" style="margin-top:var(--sp7);"><span>Title formulas — no video ever ships under its event or paper title</span><span class="rule"></span></div>
+    <ul class="formula-list">
+      <li><span class="fname">DINNER-TABLE QUESTION</span><span class="fex">"Why is it illegal to build apartments?" <em>— Good Work model</em></span></li>
+      <li><span class="fname">CLAIM + KICKER</span><span class="fex">"The government loses money on student loans. On purpose." <em>— Dad Saves America model</em></span></li>
+      <li><span class="fname">NAME + CONFLICT</span><span class="fex">"Milei to Washington: You're Doing It All Wrong" <em>— Reason TV model</em></span></li>
+      <li><span class="fname">UTILITY / SEARCH</span><span class="fex">"What to Do When Police Stop You: A Lawyer Explains" <em>— Cato's own Duane vein</em></span></li>
+      <li><span class="fname">GRIEVANCE → MECHANISM</span><span class="fex">"Why your rent is too high" <em>[delivers zoning] — Vox model</em></span></li>
+    </ul>
+
+    <div class="eyebrow" style="margin-top:var(--sp7);"><span>Realistic weekly rhythm</span><span class="rule"></span></div>
+    <div class="week">
+      <div class="day"><span class="dname">Mon</span><span class="chip">F1 · Interview or clips</span></div>
+      <div class="day"><span class="dname">Tue</span><span class="chip alt">F6 · Original Short</span></div>
+      <div class="day"><span class="dname">Wed</span><span class="chip alt">F5 · Quick-take (if news)</span></div>
+      <div class="day"><span class="dname">Thu</span><span class="chip alt">F6 · Original Short</span></div>
+      <div class="day"><span class="dname">Fri</span><span class="chip alt">F5 · Quick-take (if news)</span></div>
+      <div class="day"><span class="dname">Sat</span><span class="chip alt">—</span></div>
+      <div class="day"><span class="dname">Sun</span><span class="chip alt">—</span></div>
+    </div>
+    <p class="chart-note">Plus monthly: one F2 flagship + one to two F3 Receipts. Quarterly: one F4 Know Your Rights flagship. One upload slot per day, maximum — batch-dumping ends here.</p>
+
+    <div class="eyebrow" style="margin-top:var(--sp7);"><span>30 / 60 / 90-day rollout</span><span class="rule"></span></div>
+    <div class="rollout">
+      <div class="stage">
+        <div class="sh"><span class="days">DAYS 1–30</span><h4>Stop the bleeding</h4></div>
+        <ol>
+          <li>Title rule + one-upload-per-day + no-deletions policy (zero cost, immediate)</li>
+          <li>Fix metadata on the top 100 videos by lifetime views</li>
+          <li>Repackage the Milei keynote and the birthright-citizenship forum as F1 proof-of-concept</li>
+          <li>Replace the channel trailer with a best-of sizzle</li>
+          <li>Redirect the orphan "catovideo1" channel; fix cato.org links</li>
+        </ol>
+      </div>
+      <div class="stage">
+        <div class="sh"><span class="days">DAYS 31–60</span><h4>Build the engine</h4></div>
+        <ol>
+          <li>Screen-test scholars; pick 2–3 recurring on-camera hosts</li>
+          <li>Launch F5 quick-takes and the F6 original-Shorts doctrine</li>
+          <li>Codify the thumbnail system; start A/B/C testing</li>
+          <li>Write and shoot the first F3 Receipts episode</li>
+          <li>Restructure homepage shelves and playlists by viewer intent</li>
+        </ol>
+      </div>
+      <div class="stage">
+        <div class="sh"><span class="days">DAYS 61–90</span><h4>Launch the flagships</h4></div>
+        <ol>
+          <li>Premiere the first F2 flagship question explainer</li>
+          <li>Announce Know Your Rights with a new episode + Shorts from Duane's back catalog</li>
+          <li>Stand up the weekly rubric triage meeting as the standing greenlight process</li>
+          <li>Build the measurement dashboard: views/upload by format, CTR, 30s/50% retention, subs/upload</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PHASE 4: RUBRIC ============ -->
+  <section id="rubric" class="wrap">
+    <div class="section-head">
+      <span class="num">PHASE 4</span>
+      <h2>Video Selection Rubric</h2>
+    </div>
+    <p class="section-sub prose">Score every proposed or existing video 1–5 on each criterion below; multiply by weight and sum for a weighted total. Two scorers should land within one point per criterion using these anchors — if they don't, the concept is underdefined.</p>
+
+    <div style="margin-top:var(--sp6);">
+      <div class="rubric-item">
+        <div class="rubric-left"><h4>Audience demand<span class="mono" style="color:var(--ink-faint);"> / dinner-table test</span></h4><div class="measures">Would a non-wonk lean in at dinner? Is there findable search or browse demand?</div><div class="weight-track"><div class="weight-fill" style="width:15%"></div></div><span class="weight-num tabular">15% weight</span></div>
+        <div class="anchor-scale">
+          <div class="anchor lo"><span class="n">1</span>Internal milestone or program housekeeping ("Center 20th Anniversary")</div>
+          <div class="anchor mid"><span class="n">3</span>Solid policy topic with a findable audience</div>
+          <div class="anchor hi"><span class="n">5</span>A question people already argue about or search for</div>
+        </div>
+      </div>
+      <div class="rubric-item">
+        <div class="rubric-left"><h4>Hook strength</h4><div class="measures">Can title + thumbnail + first 15s make one promise the video pays off?</div><div class="weight-track"><div class="weight-fill" style="width:15%"></div></div><span class="weight-num tabular">15% weight</span></div>
+        <div class="anchor-scale">
+          <div class="anchor lo"><span class="n">1</span>Only an event/paper title exists; opens with "Welcome to today's forum…"</div>
+          <div class="anchor mid"><span class="n">3</span>A workable question or claim title, cold open needs manufacturing</div>
+          <div class="anchor hi"><span class="n">5</span>The hook writes itself — a bare number, a quote, an anomaly</div>
+        </div>
+      </div>
+      <div class="rubric-item">
+        <div class="rubric-left"><h4>Strategic / mission fit</h4><div class="measures">Advances Cato's core issues; a new viewer knows what channel they're on</div><div class="weight-track"><div class="weight-fill" style="width:12%"></div></div><span class="weight-num tabular">12% weight</span></div>
+        <div class="anchor-scale">
+          <div class="anchor lo"><span class="n">1</span>Off-mission or purely reactive rage-bait</div>
+          <div class="anchor mid"><span class="n">3</span>Mission-adjacent but interchangeable with any outlet</div>
+          <div class="anchor hi"><span class="n">5</span>Squarely on a pillar; only Cato could make it this credibly</div>
+        </div>
+      </div>
+      <div class="rubric-item">
+        <div class="rubric-left"><h4>Format–audience fit</h4><div class="measures">Maps to a menu format (F1–F6) with a proven comp</div><div class="weight-track"><div class="weight-fill" style="width:12%"></div></div><span class="weight-num tabular">12% weight</span></div>
+        <div class="anchor-scale">
+          <div class="anchor lo"><span class="n">1</span>Raw panel/webinar with no packaging plan</div>
+          <div class="anchor mid"><span class="n">3</span>Fits a format with modifications</div>
+          <div class="anchor hi"><span class="n">5</span>Drops cleanly into a format whose comp has verified demand</div>
+        </div>
+      </div>
+      <div class="rubric-item">
+        <div class="rubric-left"><h4>Differentiation / authority edge</h4><div class="measures">Data, scholars, access, or rigor others can't bring</div><div class="weight-track"><div class="weight-fill" style="width:10%"></div></div><span class="weight-num tabular">10% weight</span></div>
+        <div class="anchor-scale">
+          <div class="anchor lo"><span class="n">1</span>Commodity take a pundit could tweet</div>
+          <div class="anchor mid"><span class="n">3</span>Good angle, moderate edge</div>
+          <div class="anchor hi"><span class="n">5</span>Primary-source math, a unique scholar, or exclusive access</div>
+        </div>
+      </div>
+      <div class="rubric-item">
+        <div class="rubric-left"><h4>Packaging potential</h4><div class="measures">Faces, visuals, story, chapters — can this look like something?</div><div class="weight-track"><div class="weight-fill" style="width:10%"></div></div><span class="weight-num tabular">10% weight</span></div>
+        <div class="anchor-scale">
+          <div class="anchor lo"><span class="n">1</span>Podium wide-shot, slides, no B-roll possible</div>
+          <div class="anchor mid"><span class="n">3</span>Talking head plus decent archival or graphics</div>
+          <div class="anchor hi"><span class="n">5</span>Natural faces, field footage, or a map spine — the thumbnail is obvious</div>
+        </div>
+      </div>
+      <div class="rubric-item">
+        <div class="rubric-left"><h4>Production feasibility vs. return</h4><div class="measures">Cost/time against realistic view expectation for its format</div><div class="weight-track"><div class="weight-fill" style="width:10%"></div></div><span class="weight-num tabular">10% weight</span></div>
+        <div class="anchor-scale">
+          <div class="anchor lo"><span class="n">1</span>Weeks of work for a format that historically does under 1K</div>
+          <div class="anchor mid"><span class="n">3</span>Standard effort, standard return</div>
+          <div class="anchor hi"><span class="n">5</span>Cheap relative to its comp's proven ceiling</div>
+        </div>
+      </div>
+      <div class="rubric-item">
+        <div class="rubric-left"><h4>Evergreen vs. timely value</h4><div class="measures">Search-durable in 2 years, OR inside a hot news window right now</div><div class="weight-track"><div class="weight-fill" style="width:8%"></div></div><span class="weight-num tabular">8% weight</span></div>
+        <div class="anchor-scale">
+          <div class="anchor lo"><span class="n">1</span>Neither — stale news or dated framing</div>
+          <div class="anchor mid"><span class="n">3</span>Moderately durable or moderately timely</div>
+          <div class="anchor hi"><span class="n">5</span>Evergreen search magnet, or a same-week news peg with a fast path to publish</div>
+        </div>
+      </div>
+      <div class="rubric-item">
+        <div class="rubric-left"><h4>Clip / distribution potential</h4><div class="measures">Yields 3+ quote-first clips, Shorts, and a sources page</div><div class="weight-track"><div class="weight-fill" style="width:8%"></div></div><span class="weight-num tabular">8% weight</span></div>
+        <div class="anchor-scale">
+          <div class="anchor lo"><span class="n">1</span>Monolithic; nothing quotable</div>
+          <div class="anchor mid"><span class="n">3</span>One or two usable moments</div>
+          <div class="anchor hi"><span class="n">5</span>A clip machine — quotable guest, listable segments, Shorts-able stakes</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="eyebrow" style="margin-top:var(--sp7);"><span>Thresholds — weighted total, 1 to 5 scale</span><span class="rule"></span></div>
+    <div class="threshold-scale">
+      <div class="tband">
+        <div class="kill">KILL &lt; 3.0</div>
+        <div class="rework">REWORK 3.0–3.9</div>
+        <div class="go">GREENLIGHT ≥ 4.0</div>
+      </div>
+      <div class="tband-labels"><span>1.0</span><span>2.0</span><span>3.0</span><span>4.0</span><span>5.0</span></div>
+    </div>
+
+    <div class="flag-grid">
+      <div class="flagbox red">
+        <h4>Auto-reject red flags — any one kills the score</h4>
+        <ul>
+          <li>Raw multi-speaker panel with no single-guest cut planned</li>
+          <li>Ships under its event, paper, or program title</li>
+          <li>Internal, anniversary, or self-congratulation content</li>
+          <li>No identifiable viewer question it answers</li>
+          <li>Credibility risk — overclaims data or adopts framing a scholar wouldn't sign</li>
+          <li>News peg already dead (&gt;1 week old for commentary formats)</li>
+        </ul>
+      </div>
+      <div class="flagbox green">
+        <h4>Greenlight-regardless — make it, score later</h4>
+        <ul>
+          <li>Head of state, SCOTUS advocate, or A-list name on Cato's stage (F1 packaging is mandatory — the Milei rule)</li>
+          <li>Same-day scholar reaction to a SCOTUS decision squarely in Cato's lane</li>
+          <li>Direct response to a viral claim (&gt;1M views) that misstates Cato research</li>
+          <li>A proven-vein sequel — demand is already demonstrated</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ RANKED ============ -->
+  <section id="ranked" class="wrap">
+    <div class="section-head">
+      <span class="num">SYNTHESIS</span>
+      <h2>Recommendations Ranked by Impact</h2>
+    </div>
+    <ol class="ranked">
+      <li><span class="rank">01</span><div class="rtext">Install the event-to-interview pipeline (F1); never post a raw panel again.<span class="ev">Highest ceiling, lowest cost — the asset already exists. Cleese 2.4M / Taibbi 1.6M vs. Cato's 564-view SCOTUS forum.</span></div></li>
+      <li><span class="rank">02</span><div class="rtext">Enforce the title rule channel-wide.<span class="ev">Zero cost. Every Cato hit already follows it by accident.</span></div></li>
+      <li><span class="rank">03</span><div class="rtext">Mine the channel's proven veins as franchises.<span class="ev">Demand demonstrated by Duane (835.7K) and 100 Cases (526K) — never followed up.</span></div></li>
+      <li><span class="rank">04</span><div class="rtext">Launch the monthly flagship question explainer (F2) with a host persona.<span class="ev">Good Work's 1.2M on congressional-ethics policy with a 3-person team.</span></div></li>
+      <li><span class="rank">05</span><div class="rtext">Launch The Receipts (F3).<span class="ev">Converts the existing op-ed pipeline into video; imports opposing audiences. Reason's 1.5M essay at 8:43.</span></div></li>
+      <li><span class="rank">06</span><div class="rtext">Fix channel hygiene — identity, categories, trailer, upload rhythm, no deletions.<span class="ev">Zero-cost drag removal (P2 / P3 / P5).</span></div></li>
+      <li><span class="rank">07</span><div class="rtext">Stand up quick-takes (F5) inside news windows.<span class="ev">Recovers value currently harvested by Reuters, Yahoo, and C-SPAN (P6).</span></div></li>
+      <li><span class="rank">08</span><div class="rtext">Adopt the original-Shorts doctrine (F6).<span class="ev">Good Work's 859K original Short vs. Cato's 700–2K clip fragments.</span></div></li>
+      <li><span class="rank">09</span><div class="rtext">Codify the thumbnail/design system and A/B/C test everything.<span class="ev">Compounds every other item — verify current thumbnails by eye first.</span></div></li>
+      <li><span class="rank">10</span><div class="rtext">Run the Phase 4 rubric as the standing weekly greenlight process.<span class="ev">The mechanism that keeps items 1–9 from regressing to the event calendar.</span></div></li>
+    </ol>
+  </section>
+
+  <!-- ============ APPENDIX ============ -->
+  <section id="appendix" class="wrap">
+    <div class="section-head">
+      <span class="num">APPENDIX</span>
+      <h2>Cited Example Videos</h2>
+    </div>
+    <p class="section-sub prose">Grouped by channel. View counts are as-of-crawl, July 2026, and move daily.</p>
+
+    <details class="chan" open>
+      <summary>Cato Institute (current channel) <span class="arrow">▸</span></summary>
+      <div class="body">
+        <div class="vid-row"><a href="https://www.youtube.com/watch?v=-FENubmZGj8" target="_blank" rel="noopener">You Have the Right to Remain Innocent — James Duane</a><span class="v tabular">835.7K</span></div>
+        <div class="vid-row"><a href="https://www.youtube.com/watch?v=_f-AqXVjOGU" target="_blank" rel="noopener">Introduction to Constitutional Law: 100 SCOTUS Cases</a><span class="v tabular">526.0K</span></div>
+        <div class="vid-row"><a href="https://www.youtube.com/watch?v=EtQqAL9apYA" target="_blank" rel="noopener">A Conversation with Elon Musk</a><span class="v tabular">333.2K</span></div>
+        <div class="vid-row"><a href="https://www.youtube.com/watch?v=IoGp9vgeGRc" target="_blank" rel="noopener">How Sweden is Responding to the Coronavirus</a><span class="v tabular">192.4K</span></div>
+        <div class="vid-row"><a href="https://www.youtube.com/watch?v=tE8Xom38Rd8" target="_blank" rel="noopener">Cops on Camera</a><span class="v tabular">127.3K</span></div>
+        <div class="vid-row"><a href="https://www.youtube.com/watch?v=gmOiybHc2wk" target="_blank" rel="noopener">Javier Milei — Keynote Address (Original Audio)</a><span class="v tabular">1.3K</span></div>
+        <div class="vid-row"><a href="https://www.youtube.com/watch?v=pcYsiMVZ5s8" target="_blank" rel="noopener">Trump v. Barbara: Birthright Citizenship</a><span class="v tabular">564</span></div>
+        <div class="vid-row"><a href="https://www.youtube.com/watch?v=Ws04LFmZbiQ" target="_blank" rel="noopener">Channel trailer — "Welcome to The Cato Institute"</a><span class="v tabular">2.5K</span></div>
+      </div>
+    </details>
+
+    <details class="chan">
+      <summary>Reason TV <span class="arrow">▸</span></summary>
+      <div class="body">
+        <div class="vid-row"><a href="https://www.youtube.com/watch?v=mBf6kJIbXLg" target="_blank" rel="noopener">John Cleese's War on Wokeism</a><span class="v tabular">2.4M</span></div>
+        <div class="vid-row"><a href="https://www.youtube.com/watch?v=Kfyw3xA2hv0" target="_blank" rel="noopener">Matt Taibbi: How the Left lost its mind</a><span class="v tabular">1.6M</span></div>
+        <div class="vid-row"><a href="https://www.youtube.com/watch?v=Osbwd6d66wA" target="_blank" rel="noopener">States Trying to Nullify Federal Gun Control (76× outlier)</a><span class="v tabular">1.93M</span></div>
+        <div class="vid-row"><a href="https://www.youtube.com/watch?v=Cd0OeC6Syd4" target="_blank" rel="noopener">Forget the Great Reset. Embrace the Great Escape.</a><span class="v tabular">1.5M</span></div>
+        <div class="vid-row"><a href="https://www.youtube.com/watch?v=PgiQ-LmJGMY" target="_blank" rel="noopener">Do Studies Show Gun Control Works?</a><span class="v tabular">1.12M</span></div>
+        <div class="vid-row"><a href="https://www.youtube.com/watch?v=s5BDJIrvAQo" target="_blank" rel="noopener">Great Moments in Unintended Consequences, Vol. 13</a><span class="v tabular">568K</span></div>
+        <div class="vid-row"><a href="https://www.youtube.com/watch?v=TwiE1dxGYNY" target="_blank" rel="noopener">A private libertarian city in Honduras (Próspera)</a><span class="v tabular">253K</span></div>
+      </div>
+    </details>
+
+    <details class="chan">
+      <summary>Vox <span class="arrow">▸</span></summary>
+      <div class="body">
+        <div class="vid-row"><a href="https://www.youtube.com/watch?v=QMbHLF_zwjs" target="_blank" rel="noopener">Why no aquarium has a great white shark</a><span class="v tabular">32.7M</span></div>
+        <div class="vid-row"><a href="https://www.youtube.com/watch?v=iRYZjOuUnlU" target="_blank" rel="noopener">The Israel-Palestine conflict: a brief, simple history</a><span class="v tabular">27.5M</span></div>
+        <div class="vid-row"><a href="https://www.youtube.com/watch?v=VYJtb2YXae8" target="_blank" rel="noopener">Why we all need subtitles now</a><span class="v tabular">17.2M</span></div>
+        <div class="vid-row"><a href="https://www.youtube.com/watch?v=62tIvfP9A2w" target="_blank" rel="noopener">The most feared song in jazz, explained (Earworm)</a><span class="v tabular">10.5M</span></div>
+        <div class="vid-row"><a href="https://www.youtube.com/watch?v=4WvKeYuwifc" target="_blank" rel="noopener">Divided island: Haiti and the DR (Vox Borders)</a><span class="v tabular">8.6M</span></div>
+        <div class="vid-row"><a href="https://www.youtube.com/watch?v=NUMa0QkPzns" target="_blank" rel="noopener">It's not you. Phones are designed to be addicting.</a><span class="v tabular">3.2M</span></div>
+        <div class="vid-row"><a href="https://www.youtube.com/watch?v=KhQGHY44XPM" target="_blank" rel="noopener">The House of Representatives is too small</a><span class="v tabular">671.8K</span></div>
+        <div class="vid-row"><a href="https://www.youtube.com/watch?v=5FUbZllRoY0" target="_blank" rel="noopener">A simple way to lower everyone's property tax</a><span class="v tabular">28.5K</span></div>
+      </div>
+    </details>
+
+    <details class="chan">
+      <summary>Dad Saves America <span class="arrow">▸</span></summary>
+      <div class="body">
+        <div class="vid-row"><a href="https://www.youtube.com/watch?v=p-hhNAEE6vU" target="_blank" rel="noopener">Adam Carolla Is Worried We're Raising Kids Like Pets</a><span class="v tabular">912.8K</span></div>
+        <div class="vid-row"><a href="https://www.youtube.com/watch?v=YilHMoMXGr8" target="_blank" rel="noopener">Adam Carolla Calls Out Gavin Newsom (clip)</a><span class="v tabular">314.1K</span></div>
+        <div class="vid-row"><a href="https://www.youtube.com/watch?v=0TY_2OIPcl0" target="_blank" rel="noopener">This Is Actual Communism. I'm Not Being Hyperbolic.</a><span class="v tabular">201.6K</span></div>
+        <div class="vid-row"><a href="https://www.youtube.com/watch?v=zG3cvQQmUCk" target="_blank" rel="noopener">Jonathan Haidt: Antifragility Is the Secret (clip)</a><span class="v tabular">170.3K</span></div>
+        <div class="vid-row"><a href="https://www.youtube.com/watch?v=dU-TA0O0lc0" target="_blank" rel="noopener">Jonathan Haidt on Gen Z Fragility (full interview)</a><span class="v tabular">144.5K</span></div>
+        <div class="vid-row"><a href="https://www.youtube.com/watch?v=VhiPJZARbc4" target="_blank" rel="noopener">They Lied to Your Kids for 15 Years</a><span class="v tabular">120.9K</span></div>
+      </div>
+    </details>
+
+    <details class="chan">
+      <summary>The Verge <span class="arrow">▸</span></summary>
+      <div class="body">
+        <div class="vid-row"><a href="https://www.youtube.com/watch?v=WYYvHb03Eog" target="_blank" rel="noopener">Apple iPhone X first look</a><span class="v tabular">5.9M</span></div>
+        <div class="vid-row"><a href="https://www.youtube.com/watch?v=jqRdl2P2CjE" target="_blank" rel="noopener">iPhone X first impressions</a><span class="v tabular">1.7M</span></div>
+        <div class="vid-row"><a href="https://www.youtube.com/watch?v=5cVGKvl7Oek" target="_blank" rel="noopener">Meta Ray-Ban Display hands-on</a><span class="v tabular">889.8K</span></div>
+        <div class="vid-row"><a href="https://www.youtube.com/watch?v=3DK7fiAkpRM" target="_blank" rel="noopener">iPhone 17 Pro vs. iPhone Air Review</a><span class="v tabular">374.5K</span></div>
+        <div class="vid-row"><a href="https://www.youtube.com/watch?v=hjer379ONJo" target="_blank" rel="noopener">Why I left The Verge (Becca Farsace)</a><span class="v tabular">440.6K</span></div>
+        <div class="vid-row"><a href="https://www.youtube.com/watch?v=DA7brSw1klM" target="_blank" rel="noopener">Vergecast — All eyes on Meta's smart glasses</a><span class="v tabular">17.8K</span></div>
+      </div>
+    </details>
+
+    <details class="chan">
+      <summary>Good Work <span class="arrow">▸</span></summary>
+      <div class="body">
+        <div class="vid-row"><a href="https://www.youtube.com/watch?v=M_leNmT7xvM" target="_blank" rel="noopener">So does private equity own everything?</a><span class="v tabular">3.0M</span></div>
+        <div class="vid-row"><a href="https://www.youtube.com/watch?v=aGEGE3po_Qc" target="_blank" rel="noopener">The mysterious new industry cranking out billionaires</a><span class="v tabular">1.8M</span></div>
+        <div class="vid-row"><a href="https://www.youtube.com/watch?v=mOptJl8Xkx0" target="_blank" rel="noopener">So we're betting on everything now?</a><span class="v tabular">1.4M</span></div>
+        <div class="vid-row"><a href="https://www.youtube.com/watch?v=vT-u-SPj4_c" target="_blank" rel="noopener">Why can politicians trade stocks?</a><span class="v tabular">1.2M</span></div>
+        <div class="vid-row"><a href="https://www.youtube.com/watch?v=yjP8xqBfXBY" target="_blank" rel="noopener">What's the point of the Cybertruck?</a><span class="v tabular">1.1M</span></div>
+        <div class="vid-row"><a href="https://www.youtube.com/watch?v=wKWno9cRA8E" target="_blank" rel="noopener">We're automating job interviews now</a><span class="v tabular">698K</span></div>
+      </div>
+    </details>
+
+    <details class="chan">
+      <summary>Cross-benchmarks <span class="arrow">▸</span></summary>
+      <div class="body">
+        <div class="vid-row"><a href="https://www.youtube.com/watch?v=YJQSuUZdcV4" target="_blank" rel="noopener">Soho Forum — Capitalism vs. Socialism debate (Reason)</a><span class="v tabular">8.7M</span></div>
+        <div class="vid-row"><a href="https://www.youtube.com/watch?v=bRkuv-fOV7k" target="_blank" rel="noopener">The Hong Konger (Acton Institute documentary)</a><span class="v tabular">5.1M</span></div>
+        <div class="vid-row"><a href="https://www.youtube.com/watch?v=5lk7w3OVZ_U" target="_blank" rel="noopener">Powell at Cato's Monetary Conference, via Yahoo Finance</a><span class="v tabular">30.9K</span></div>
+      </div>
+    </details>
+  </section>
+
+  <footer class="wrap">
+    <div class="prose">
+      <p><b>Method note.</b> All figures triangulated via Social Blade, SPEAKRJ, Playboard, crawled YouTube watch-page metadata, and press coverage — direct youtube.com renders and thumbnail images were blocked at the research proxy, so thumbnail specifics throughout this document are inference, not direct observation; verify by eye before building the new thumbnail system. View counts are as-of-crawl, July 2026, and move daily.</p>
+      <p>Living document — re-run <code>/youtube-revamp --update</code> to refresh metrics, or <code>/youtube-revamp --triage "video idea"</code> to score a single proposal against the Phase 4 rubric.</p>
+    </div>
+  </footer>
+</main>
+
+<script>
+  (function(){
+    var root = document.documentElement;
+    var btn = document.getElementById('themeToggle');
+    var stored = null;
+    try { stored = localStorage.getItem('cato-yt-theme'); } catch(e) {}
+    if (stored === 'dark' || stored === 'light') root.setAttribute('data-theme', stored);
+
+    btn.addEventListener('click', function(){
+      var current = root.getAttribute('data-theme');
+      if (!current) {
+        current = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      var next = current === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('cato-yt-theme', next); } catch(e) {}
+    });
+
+    var tip = document.getElementById('tooltip');
+    var tipTargets = document.querySelectorAll('[data-tip]');
+    function place(e){
+      var x = (e.clientX !== undefined) ? e.clientX : 0;
+      var y = (e.clientY !== undefined) ? e.clientY : 0;
+      if (x === 0 && y === 0 && e.currentTarget) {
+        var r = e.currentTarget.getBoundingClientRect();
+        x = r.left + r.width / 2;
+        y = r.top;
+      }
+      tip.style.left = x + 'px';
+      tip.style.top = y + 'px';
+    }
+    tipTargets.forEach(function(el){
+      el.addEventListener('mouseenter', function(e){
+        tip.textContent = el.getAttribute('data-tip');
+        tip.hidden = false;
+        place(e);
+      });
+      el.addEventListener('mousemove', place);
+      el.addEventListener('mouseleave', function(){ tip.hidden = true; });
+      el.addEventListener('focus', function(e){
+        tip.textContent = el.getAttribute('data-tip');
+        tip.hidden = false;
+        place(e);
+      });
+      el.addEventListener('blur', function(){ tip.hidden = true; });
+    });
+  })();
+</script>
