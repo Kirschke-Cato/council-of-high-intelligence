@@ -5,6 +5,7 @@
 - `SKILL.md` — coordinator protocol with execution sequence, modes, and verdict templates
 - `SKILL.codex.md` — Codex-specific council coordinator protocol
 - `agents/council-*.md` — 18 member personas with YAML frontmatter
+- `skills/i-have-adhd/` — bundled output-style skill, vendored verbatim from [ayghri/i-have-adhd](https://github.com/ayghri/i-have-adhd) (MIT; update from upstream, don't hand-edit)
 - `install.sh` — installs to `~/.claude/` and optionally `~/.codex/skills/council/`
 - `configs/` — provider/model routing templates
 - `demos/` — example prompts and scoring rubric

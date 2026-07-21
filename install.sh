@@ -142,6 +142,12 @@ if [[ ${#agent_files[@]} -eq 0 ]]; then
 fi
 
 CONFIGS_SRC_DIR="${SCRIPT_DIR}/configs"
+ADHD_SKILL_SRC_DIR="${SCRIPT_DIR}/skills/i-have-adhd"
+
+if [[ ! -f "${ADHD_SKILL_SRC_DIR}/SKILL.md" ]]; then
+  echo "Error: SKILL.md not found at ${ADHD_SKILL_SRC_DIR}/SKILL.md" >&2
+  exit 1
+fi
 
 echo "Installing Council of High Intelligence..."
 if [[ "${INSTALL_CLAUDE}" == true ]]; then
@@ -175,6 +181,11 @@ if [[ "${INSTALL_CLAUDE}" == true ]]; then
     run_cmd install -m 0755 "${script_file}" "${CLAUDE_SCRIPTS_DEST_DIR}/"
     ((scripts_installed+=1))
   done
+
+  echo "Installing Claude i-have-adhd skill..."
+  CLAUDE_ADHD_DEST_DIR="${CLAUDE_DIR}/skills/i-have-adhd"
+  run_cmd mkdir -p "${CLAUDE_ADHD_DEST_DIR}"
+  run_cmd install -m 0644 "${ADHD_SKILL_SRC_DIR}/SKILL.md" "${CLAUDE_ADHD_DEST_DIR}/SKILL.md"
 
   claude_configs_installed=0
   if [[ "$COPY_CONFIGS" == true ]]; then
@@ -225,6 +236,12 @@ if [[ "${INSTALL_CODEX}" == true ]]; then
     run_cmd install -m 0755 "${script_file}" "${CODEX_SCRIPTS_DEST_DIR}/"
     ((codex_scripts_installed+=1))
   done
+
+  echo "Installing Codex i-have-adhd skill..."
+  CODEX_ADHD_DEST_DIR="${CODEX_DIR}/skills/i-have-adhd"
+  run_cmd mkdir -p "${CODEX_ADHD_DEST_DIR}/agents"
+  run_cmd install -m 0644 "${ADHD_SKILL_SRC_DIR}/SKILL.md" "${CODEX_ADHD_DEST_DIR}/SKILL.md"
+  run_cmd install -m 0644 "${ADHD_SKILL_SRC_DIR}/agents/openai.yaml" "${CODEX_ADHD_DEST_DIR}/agents/openai.yaml"
 
   codex_configs_installed=0
   if [[ "$COPY_CONFIGS" == true ]]; then
@@ -291,6 +308,11 @@ EOF
     ((gemini_scripts_installed+=1))
   done
 
+  echo "Installing Gemini i-have-adhd skill..."
+  GEMINI_ADHD_DEST_DIR="${GEMINI_EXT_ROOT}/skills/i-have-adhd"
+  run_cmd mkdir -p "${GEMINI_ADHD_DEST_DIR}"
+  run_cmd install -m 0644 "${ADHD_SKILL_SRC_DIR}/SKILL.md" "${GEMINI_ADHD_DEST_DIR}/SKILL.md"
+
   gemini_configs_installed=0
   if [[ "$COPY_CONFIGS" == true ]]; then
     if [[ -d "${CONFIGS_SRC_DIR}" ]]; then
@@ -316,6 +338,7 @@ if [[ "${INSTALL_CLAUDE}" == true ]]; then
   echo "  Installed ${installed_count} council agents to ${AGENTS_DEST}"
   echo "  Installed skill to ${CLAUDE_SKILL_DEST}"
   echo "  Installed ${scripts_installed} scripts to ${CLAUDE_SCRIPTS_DEST_DIR}"
+  echo "  Installed i-have-adhd skill to ${CLAUDE_ADHD_DEST_DIR}"
   if [[ "$COPY_CONFIGS" == true ]]; then
     echo "  Installed ${claude_configs_installed} config files to ${CLAUDE_CONFIGS_DEST_DIR}"
   fi
@@ -324,6 +347,7 @@ if [[ "${INSTALL_CODEX}" == true ]]; then
   echo "  Installed Codex skill to ${CODEX_SKILL_DEST}"
   echo "  Installed ${codex_agents_installed} Codex council agents to ${CODEX_AGENTS_DEST_DIR}"
   echo "  Installed ${codex_scripts_installed} Codex scripts to ${CODEX_SCRIPTS_DEST_DIR}"
+  echo "  Installed i-have-adhd skill to ${CODEX_ADHD_DEST_DIR}"
   if [[ "$COPY_CONFIGS" == true ]]; then
     echo "  Installed ${codex_configs_installed} Codex config files to ${CODEX_CONFIGS_DEST_DIR}"
   fi
@@ -332,9 +356,10 @@ if [[ "${INSTALL_GEMINI}" == true ]]; then
   echo "  Installed Gemini skill to ${GEMINI_SKILL_DEST}"
   echo "  Installed ${gemini_agents_installed} Gemini council agents to ${GEMINI_AGENTS_DEST_DIR}"
   echo "  Installed ${gemini_scripts_installed} Gemini scripts to ${GEMINI_SCRIPTS_DEST_DIR}"
+  echo "  Installed i-have-adhd skill to ${GEMINI_ADHD_DEST_DIR}"
   if [[ "$COPY_CONFIGS" == true ]]; then
     echo "  Installed ${gemini_configs_installed} Gemini config files to ${GEMINI_CONFIGS_DEST_DIR}"
   fi
 fi
 
-echo "Restart your CLI client(s) and use /council to convene the council."
+echo "Restart your CLI client(s) and use /council to convene the council, or /i-have-adhd for action-first output."

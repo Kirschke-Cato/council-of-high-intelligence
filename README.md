@@ -275,6 +275,10 @@ Installs 18 council agents plus skill files for Claude and/or Codex.
 
 Restart your target client(s) after installing. Run `./scripts/council-simulation-checklist.sh` to validate. Try the [demo session pack](demos/session-pack.md) to test all modes.
 
+### Bundled skill: `i-have-adhd`
+
+The installer also ships [`i-have-adhd`](skills/i-have-adhd/SKILL.md), an output-style skill vendored from [ayghri/i-have-adhd](https://github.com/ayghri/i-have-adhd) (MIT). It shapes replies for an ADHD reader: lead with the next action, number multi-step work, restate state each turn, specific time estimates, no preamble or closers. Invoke with `/i-have-adhd` in Claude Code (`$i-have-adhd` in Codex); say "stop adhd mode" to turn it off. It never activates on its own (`disable-model-invocation: true`).
+
 ## Requirements
 
 - [Claude Code](https://claude.ai/claude-code) CLI (required for Claude usage)
