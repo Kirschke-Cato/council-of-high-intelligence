@@ -7,7 +7,7 @@ Digest of [muratcankoylan/Agent-Skills-for-Context-Engineering](https://github.c
 The review validates several existing design choices — keep these and cite them when challenged:
 
 | Council mechanism | Backing principle (source skill) |
-|---|---|
+| --- | --- |
 | Round 2 anonymization + anti-conformity directive | Sycophantic consensus is the dominant multi-agent failure; adversarial roles + stated disagreement before convergence (`multi-agent-patterns`) |
 | Blind-first Round 1 | Keep early-round workers blind to the favored approach (`long-horizon-prompting`) |
 | Agreement check >70% → counterfactual prompt | Treat fast consensus as a diversity-failure signal, not corroboration (`long-horizon-prompting`) |

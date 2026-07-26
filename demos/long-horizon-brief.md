@@ -114,7 +114,7 @@ verdict content must originate in-session.
 Scored against the skill's 10-dimension rubric (0 absent / 1 gameable / 2 adversary-proof):
 
 | # | Dimension | Score | Note |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | 1 | Success predicate | 2 | Decidable from stored transcripts + checklist exit codes |
 | 2 | Definitions | 2 | Failing/passing thresholds and degenerate cases fixed |
 | 3 | Non-counting outcomes | 2 | Each near miss excluded by name |
