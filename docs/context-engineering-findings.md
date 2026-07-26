@@ -19,6 +19,8 @@ The review validates several existing design choices — keep these and cite the
 
 ## Gaps worth adopting (ranked)
 
+> **Status**: all five implemented on this branch — see the `[Unreleased]` CHANGELOG entries. 1–2 landed as the Chairman Audit Checklist + Verdict Non-Counting List blocks (Output Templates), 3 as the STEP 7 transcript reorder + Round 1 compression, 4 as STEP 3 clustered cross-examination, 5 as the STEP 8 Phase 2 control-arm requirement. All mirrored in `SKILL.codex.md` and `SKILL.gemini.md`.
+
 1. **Chairman audit checklist (STEP 7).** Highest-leverage finding: verifiers with an *enumerated, domain-specific* failure-mode list catch what generic "weigh by validity" instructions miss. The Chairman prompt should hunt for named council failure modes: stance-label gerrymandering (distinct prose positions normalized into one label to fake consensus), position updates that never name the flaw (silent anti-conformity violations), evidence-label inflation (heuristic claims tagged empirical), unobservable or undated kill criteria, `DEALBREAKER: yes` dissent missing from the Minority Report, and verdict positions no member actually held.
 
 2. **Non-counting outcomes for verdicts (STEP 7 / templates).** Long-horizon briefs enumerate "answer-shaped near misses" that do not count. The verdict templates constrain format but never state what does *not* count as a verdict: "it depends" without decision conditions, a restatement of the dilemma as the Consensus section, kill criteria without thresholds. An explicit non-counting list gives the Chairman a rejection gate, not just a fill-in template.

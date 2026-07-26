@@ -364,7 +364,13 @@ Emit to user:
 
 **Execution strategy:**
 - If panel size ≤ 4: run fully **SEQUENTIAL** (each member sees all prior Round 2 responses, still with anonymized labels)
-- If panel size ≥ 5: run all members in **PARALLEL** (each sees all anonymized Round 1 outputs). For panels of 7+, optionally use **Batch A** (parallel) + **Batch B** (sequential, sees Batch A outputs with the same labels) if cross-contamination would meaningfully improve quality.
+- If panel size 5–11: run all members in **PARALLEL** (each sees all anonymized Round 1 outputs). For panels of 7+, optionally use **Batch A** (parallel) + **Batch B** (sequential, sees Batch A outputs with the same labels) if cross-contamination would meaningfully improve quality.
+- If panel size ≥ 12: run **CLUSTERED** cross-examination. Every-member-sees-everything at this scale pushes both the coordinator payload and each member's input past context-degradation thresholds (supervisor-bottleneck guidance caps workers-per-supervisor at 3–5; `--full` is 18). Rules:
+  1. Partition the panel into clusters of 4–6 members.
+  2. Both members of any on-panel polarity pair go in the SAME cluster (opponents must see each other — the tension is the point).
+  3. Labels stay global across the panel (Member A…R), so cluster transcripts remain coherent for STEP 7.
+  4. Each member receives only their own cluster's anonymized Round 1 outputs and engages ≥2 peers within the cluster.
+  5. STEP 4 enforcement scans run per cluster; the agreement check spans the full panel.
 
 Prompt template for each member (the **Anti-conformity directive** below is evidence-based — see Choi et al., arXiv:2510.07517; Cui et al., Free-MAD arXiv:2509.11035; controlled-study arXiv:2511.07784):
 ```
@@ -417,7 +423,7 @@ Your Round 2 response restated your Round 1 position without engaging the challe
 Address {specific member}'s challenge to your position directly. What changes?
 ```
 
-**`[VERIFY]` Agreement check**: If >70% agree on core position → trigger counterfactual prompt to 2 most likely dissenters:
+**`[VERIFY]` Agreement check**: If >70% agree on core position (measured across ALL clusters when STEP 3 clustering was used) → trigger counterfactual prompt to 2 most likely dissenters:
 ```
 Assume the current consensus is wrong. What is the strongest alternative and what evidence would flip the decision?
 ```
@@ -471,34 +477,51 @@ Tie-breaking operates on the **structured `STANCE:` lines** collected in STEP 5 
 
 Synthesis is performed by the **Chairman selected in STEP 1.7**, not by the coordinator. Dispatch the synthesis as a single call (subagent / codex_exec / gemini_cli / ollama_run / cursor_cli / openai-compatible — whichever matches the Chairman's provider) using the prompt template below.
 
+**Transcript ordering (lost-in-middle mitigation).** The transcript is ordered Round 3 → Round 2 → Round 1, NOT chronologically. Attention follows a U-curve: middle-of-context content loses 10–40% recall. Chronological order buries Round 2 — the highest-signal round, where positions are actually tested — in the dead middle of the prompt. Final stances go first (they anchor the tally), cross-examination next, independent analyses last as an appendix.
+
+**Round 1 compression (panels ≥ 6).** Before dispatching, replace each member's Round 1 output with a coordinator-produced summary of at most 50 words in this fixed shape: `Position: "…" | Key evidence: … | Objection raised: …`. Quote the member's position phrasing VERBATIM — the audit checklist compares Round 1 positions against later rounds, and a paraphrased position breaks that comparison. Keep full Round 1 texts in coordinator state; if the Chairman's verdict flags a specific member's trajectory, re-run synthesis with that member's full Round 1 included. Panels ≤ 5 pass full Round 1 text unchanged.
+
 **Chairman prompt template:**
 ```
 You are the Chairman of the Council of High Intelligence. You did not
-deliberate in this session — you are the synthesizer.
+deliberate in this session — you are the synthesizer and auditor.
 
 The original problem under deliberation:
 {problem}
 
-The full deliberation transcript follows. Member names are now visible
-(Round 2 was anonymized for the members but the audit transcript restores
-real names for synthesis).
+The deliberation transcript follows, ordered for synthesis: final
+positions first, then the cross-examination that produced them, then
+the independent analyses as an appendix. Member names are visible
+(Round 2 was anonymized for the members but the audit transcript
+restores real names for synthesis).
 
-Round 1 — Independent Analysis:
-{Round 1 outputs, named}
+Round 3 — Final Crystallization (positions + STANCE lines):
+{Round 3 outputs, named}
 
 Round 2 — Cross-Examination:
 {Round 2 outputs, with names restored from the anonymization mapping}
 
-Round 3 — Final Crystallization:
-{Round 3 outputs, named}
+Appendix: Round 1 — Independent Analysis:
+{panels ≤ 5: full Round 1 outputs, named
+ panels ≥ 6: per-member compressed summaries per the compression rule}
 
 Your job:
+- FIRST, audit the transcript against the Chairman Audit Checklist
+  below. Name every hit in the relevant verdict section (Vote Tally,
+  Points of Disagreement, or Minority Report) — do not paper over it.
 - Weigh arguments by validity, not by repetition or seniority.
 - Surface genuine disagreement; do not invent positions no member held.
 - Lead with what the council does NOT know (Unresolved Questions).
 - Produce the Council Verdict using the template that follows. Do not
   add, remove, or rename sections. Fill each section faithfully or write
   "N/A — {reason}" if the section is genuinely empty in this session.
+- Before returning, check your draft against the Verdict Non-Counting
+  List. If the draft matches any entry, it is not a verdict — redo the
+  synthesis.
+
+{Insert the "Chairman Audit Checklist" from the Output Templates section}
+
+{Insert the "Verdict Non-Counting List" from the Output Templates section}
 
 {Insert the "Council Verdict (Full Mode)" template from the Output Templates section}
 ```
@@ -525,6 +548,8 @@ Best-effort fields (write `~unknown` if not available):
 - `duration_seconds`
 
 This block is intentionally not a sub-section of the verdict — it's session telemetry appended below a separator. Reasoning: keeps it cheap to grep, future-easy to redirect to a log file, and avoids polluting the auditable decision artifact with infra noise. Phase 2 (benchmarking harness) and Phase 3 (cost/quality sweet spots) build on this same schema once 5–10 real sessions have been collected.
+
+**Phase 2 requirement — single-agent control arm.** Multi-agent runs cost ~15× a single-agent baseline, and token usage + model choice dominate performance variance in agent evaluations. Every Phase 2 benchmark fixture must therefore include a control arm: one Chairman-tier model answering the same problem directly, scored on the same rubric. The council must beat the control on verdict quality — not merely complete.
 
 ---
 
@@ -601,6 +626,8 @@ no option.
 
 Dispatch synthesis to the Chairman selected via STEP 1.7 (auto-selected per `--chairman` / config / detected-providers; if no Chairman selection was performed for `--quick`, perform the same algorithm now). Use the Quick Verdict template below. Same fallback rule as STEP 7.
 
+The Chairman prompt includes the **Chairman Audit Checklist** and **Verdict Non-Counting List** from the Output Templates section (all items apply — quick mode has STANCE lines and a tally). Transcript ordering follows STEP 7 in miniature: Round 2 final positions + STANCE lines first, Round 1 analyses after. No Round 1 compression — quick outputs are already ≤200 words.
+
 ---
 
 ## Duo Mode Sequence (`--duo`)
@@ -669,9 +696,56 @@ Final statement. 50 words maximum. State your position. No new arguments.
 
 Dispatch synthesis to the Chairman selected via STEP 1.7. In duo mode the Chairman must NOT be either of the two duo members (hard constraint — Chairman audits, not participates). Use the Duo Verdict template below. Same fallback rule as STEP 7.
 
+The Chairman prompt includes the **Chairman Audit Checklist** and **Verdict Non-Counting List** from the Output Templates section. Tally-dependent checklist items (1 — gerrymandering, 7 — consensus-by-repetition) are N/A in duo mode; items 2, 4, and 6 (silent updates, unfalsifiable kill criteria, invented consensus) carry full force. Transcript ordering: Round 3 final statements first, Round 2 responses, Round 1 openings last.
+
 ---
 
 ## Output Templates
+
+### Chairman Audit Checklist
+
+Inserted into every Chairman synthesis prompt (STEP 7, QUICK STEP 3, DUO STEP 4). Enumerated failure modes beat generic "weigh by validity" instructions — an auditor catches what it is told to hunt for. In duo mode, tally-dependent items (1, 7) are N/A — duo issues no tally.
+
+```
+CHAIRMAN AUDIT CHECKLIST — hunt for each of these before synthesizing:
+1. Stance-label gerrymandering: final-round prose positions that differ
+   materially but share one STANCE label. On a hit, note the split in
+   the Vote Tally and treat that option's tally as contested.
+2. Silent position updates: a member's position changed between rounds
+   without naming the specific flaw in their earlier argument
+   (anti-conformity violation). Discount the update when weighing.
+3. Evidence-label inflation: claims tagged `empirical` with no
+   observation, measurement, or citation behind them. Re-weigh as
+   `heuristic` and say so in the Epistemic Diversity Scorecard.
+4. Unfalsifiable kill criteria: any draft kill criterion missing an
+   observable threshold or a date. Rewrite it to observable form
+   before emitting the verdict.
+5. Dropped dealbreakers: any `DEALBREAKER: yes` stance not represented
+   in the Minority Report.
+6. Invented consensus: a verdict position no member actually held, or
+   agreement asserted where the transcript shows none.
+7. Consensus-by-repetition: a position weighed strongly because many
+   members repeated it, not because any member grounded it. Repetition
+   is not corroboration when members share priors.
+```
+
+### Verdict Non-Counting List
+
+Inserted into every Chairman synthesis prompt. Verdict-shaped near misses, excluded by name — every near miss not excluded is an escape hatch.
+
+```
+VERDICT NON-COUNTING LIST — a draft matching any entry is not a
+verdict; redo the synthesis:
+- "It depends" without the decision conditions enumerated. (A genuine
+  split reported per STEP 6 — tallies plus the strongest argument for
+  each option — DOES count.)
+- The dilemma restated as the Consensus section.
+- Kill criteria without a measurable threshold and a date.
+- A Concrete Next Step without an artifact-producing verb.
+- Endorsement of every position at once — hedging dressed as synthesis.
+- Sections filled with generic advice not traceable to any member's
+  transcript contribution.
+```
 
 ### Council Verdict (Full Mode)
 
