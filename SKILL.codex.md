@@ -170,7 +170,7 @@ Rationale: Choi et al. (arXiv:2510.07517), Free-MAD (arXiv:2509.11035), controll
 Full mode:
 
 1. Round 1: Independent analysis, blind-first, max 300 words/member.
-2. Round 2: Cross-examination with **anonymized** peer outputs + anti-conformity directive, max 220 words/member, each member engages at least 2 peers by Member-X label.
+2. Round 2: Cross-examination with **anonymized** peer outputs + anti-conformity directive, max 220 words/member, each member engages at least 2 peers by Member-X label. Panels ≥ 12: **clustered** cross-examination — partition into clusters of 4–6 keeping on-panel polarity pairs together, labels stay global, each member sees only their cluster's anonymized Round 1 outputs; the >70% agreement check spans the full panel. (Supervisor-bottleneck guidance caps workers-per-supervisor at 3–5; every-member-sees-everything at 12+ degrades both coordinator and member contexts.)
 3. Round 3: Final position, max 100 words/member. Real names restored.
 
 Quick mode:
@@ -208,7 +208,9 @@ Synthesis is performed by an explicit **Chairman** — a model that did NOT deli
 2. **Auto-select**: highest-tier model among available providers, **preferring one not on the panel** when possible. Tie-breaker: provider listed first by the host runtime.
 3. **Single-provider fallback**: use that provider's highest tier and note the overlap in the verdict.
 
-The Chairman is dispatched as a single call with the full audit transcript (Round 2 de-anonymized using the mapping retained in coordinator state — see Step 4 anonymization). Constraint: Chairman MUST NOT be a deliberating member in the same session.
+The Chairman is dispatched as a single call with the audit transcript (Round 2 de-anonymized using the mapping retained in coordinator state — see Step 4 anonymization), ordered **final round first, then cross-examination, then Round 1 as an appendix** — chronological order buries the highest-signal round in the long-transcript attention trough. For panels ≥ 6, compress each Round 1 output to a ≤50-word `Position: "…" | Key evidence: … | Objection raised: …` summary quoting the member's position verbatim (the audit below compares positions across rounds); keep full texts in coordinator state. Constraint: Chairman MUST NOT be a deliberating member in the same session.
+
+**Chairman audit gate.** The Chairman prompt includes an enumerated audit checklist — stance-label gerrymandering, silent position updates (no named flaw), evidence-label inflation, unfalsifiable kill criteria, dropped `DEALBREAKER: yes` dissent, invented consensus, consensus-by-repetition — and a verdict non-counting list ("it depends" without decision conditions, the dilemma restated as consensus, kill criteria without threshold + date, a next step without an artifact-producing verb, hedged endorsement of everything, generic advice untraceable to the transcript). Audit hits are named in the verdict rather than papered over; a draft matching a non-counting entry is redone before returning. A genuine split reported with tallies and strongest arguments DOES count as a verdict.
 
 Return a verdict with this order, produced by the Chairman:
 
@@ -240,4 +242,4 @@ If `spawn_agent` is unavailable or too many seats fail, run a local simulated co
 
 ### Step 7: Session Metadata (issue #7, Phase 1)
 
-After the verdict is emitted, append a `Session Metadata` block with `schema_version: 1` containing: `mode`, `panel_size`, `rounds_run`, `tools_used`, `provider_count`, `fallbacks_triggered`, and best-effort `input_tokens_estimate` / `output_tokens_estimate` / `duration_seconds` (write `~unknown` if not available from the host runtime). Block is delimited by `---` so it's grep-able and redirectable.
+After the verdict is emitted, append a `Session Metadata` block with `schema_version: 1` containing: `mode`, `panel_size`, `rounds_run`, `tools_used`, `provider_count`, `fallbacks_triggered`, and best-effort `input_tokens_estimate` / `output_tokens_estimate` / `duration_seconds` (write `~unknown` if not available from the host runtime). Block is delimited by `---` so it's grep-able and redirectable. Phase 2 benchmarking must include a single-agent control arm per fixture (one Chairman-tier model, same problem, same rubric) — multi-agent runs cost ~15× baseline, so the council must beat the control, not merely complete.
