@@ -169,7 +169,7 @@ if [[ "${INSTALL_CLAUDE}" == true ]]; then
   run_cmd mkdir -p "${CLAUDE_SCRIPTS_DEST_DIR}"
   scripts_installed=0
   shopt -s nullglob
-  script_files=("${SCRIPT_DIR}"/scripts/detect-*.sh)
+  script_files=("${SCRIPT_DIR}"/scripts/detect-*.sh "${SCRIPT_DIR}"/scripts/tally-*.sh)
   shopt -u nullglob
   for script_file in "${script_files[@]}"; do
     run_cmd install -m 0755 "${script_file}" "${CLAUDE_SCRIPTS_DEST_DIR}/"
@@ -219,7 +219,7 @@ if [[ "${INSTALL_CODEX}" == true ]]; then
   echo "Installing Codex council scripts..."
   codex_scripts_installed=0
   shopt -s nullglob
-  codex_script_files=("${SCRIPT_DIR}"/scripts/detect-*.sh)
+  codex_script_files=("${SCRIPT_DIR}"/scripts/detect-*.sh "${SCRIPT_DIR}"/scripts/tally-*.sh)
   shopt -u nullglob
   for script_file in "${codex_script_files[@]}"; do
     run_cmd install -m 0755 "${script_file}" "${CODEX_SCRIPTS_DEST_DIR}/"
@@ -284,7 +284,7 @@ EOF
   echo "Installing Gemini council scripts..."
   gemini_scripts_installed=0
   shopt -s nullglob
-  gemini_script_files=("${SCRIPT_DIR}"/scripts/detect-*.sh)
+  gemini_script_files=("${SCRIPT_DIR}"/scripts/detect-*.sh "${SCRIPT_DIR}"/scripts/tally-*.sh)
   shopt -u nullglob
   for script_file in "${gemini_script_files[@]}"; do
     run_cmd install -m 0755 "${script_file}" "${GEMINI_SCRIPTS_DEST_DIR}/"

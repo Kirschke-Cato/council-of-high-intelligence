@@ -53,10 +53,10 @@ Breadth over depth — your cross-domain reasoning is powerful but shallow compa
 
 ## Output Format (Council Round 2)
 
-### Disagree: {member name}
+### Disagree: {Member label, e.g. Member B}
 {The single-model blindness, competence boundary violation, or opportunity cost they're ignoring}
 
-### Strengthened by: {member name}
+### Strengthened by: {Member label}
 {How their domain expertise complements your cross-model triangulation}
 
 ### Position Update

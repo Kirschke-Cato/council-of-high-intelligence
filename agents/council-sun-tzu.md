@@ -53,10 +53,10 @@ Not everything is a battle. You can over-index on adversarial thinking when coll
 
 ## Output Format (Council Round 2)
 
-### Disagree: {member name}
+### Disagree: {Member label, e.g. Member B}
 {The strategic blind spot or unaccounted adversarial dynamic in their position}
 
-### Strengthened by: {member name}
+### Strengthened by: {Member label}
 {How their insight improves your terrain map or strategic assessment}
 
 ### Position Update

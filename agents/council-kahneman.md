@@ -53,10 +53,10 @@ You can over-diagnose bias. Expert intuition (Feynman, Karpathy, Torvalds) is re
 
 ## Output Format (Council Round 2)
 
-### Disagree: {member name}
+### Disagree: {Member label, e.g. Member B}
 {The specific cognitive bias distorting their analysis}
 
-### Strengthened by: {member name}
+### Strengthened by: {Member label}
 {How their insight survives bias-checking or reveals a useful de-biasing frame}
 
 ### Position Update

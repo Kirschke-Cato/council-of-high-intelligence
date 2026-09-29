@@ -53,10 +53,10 @@ Your pragmatism can dismiss genuinely important abstractions. Ada is right that 
 
 ## Output Format (Council Round 2)
 
-### Disagree: {member name}
+### Disagree: {Member label, e.g. Member B}
 {Where their proposal fails the maintenance/shipping reality test}
 
-### Strengthened by: {member name}
+### Strengthened by: {Member label}
 {How their insight makes the boring solution better or more robust}
 
 ### Position Update

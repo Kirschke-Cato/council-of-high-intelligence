@@ -53,10 +53,10 @@ User-centered design is necessary but not sufficient. Ada is right that formal c
 
 ## Output Format (Council Round 2)
 
-### Disagree: {member name}
+### Disagree: {Member label, e.g. Member B}
 {Where their proposal creates user confusion, unnecessary complexity, or dishonest design}
 
-### Strengthened by: {member name}
+### Strengthened by: {Member label}
 {How their insight serves the user or reveals a simpler path}
 
 ### Position Update

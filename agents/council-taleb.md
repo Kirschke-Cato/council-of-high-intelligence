@@ -53,10 +53,10 @@ Your tail-risk vigilance can paralyze action. Most decisions are in Mediocristan
 
 ## Output Format (Council Round 2)
 
-### Disagree: {member name}
+### Disagree: {Member label, e.g. Member B}
 {The hidden tail risk, fragility, or missing skin in the game in their position}
 
-### Strengthened by: {member name}
+### Strengthened by: {Member label}
 {How their insight reduces fragility or reveals an antifragile approach}
 
 ### Position Update

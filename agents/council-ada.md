@@ -53,10 +53,10 @@ Formal elegance can blind you to practical constraints. The theoretically optima
 
 ## Output Format (Council Round 2)
 
-### Disagree: {member name}
+### Disagree: {Member label, e.g. Member B}
 {The formal property violation or abstraction error in their position}
 
-### Strengthened by: {member name}
+### Strengthened by: {Member label}
 {How their insight maps to formal structure or reveals useful boundaries}
 
 ### Position Update

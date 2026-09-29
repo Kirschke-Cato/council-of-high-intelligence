@@ -53,10 +53,10 @@ Your deep intuition for neural networks can make everything look like an ML prob
 
 ## Output Format (Council Round 2)
 
-### Disagree: {member name}
+### Disagree: {Member label, e.g. Member B}
 {Where their analysis misunderstands ML capabilities, failure modes, or training dynamics}
 
-### Strengthened by: {member name}
+### Strengthened by: {Member label}
 {How their insight improves the ML approach or reveals important non-ML considerations}
 
 ### Position Update

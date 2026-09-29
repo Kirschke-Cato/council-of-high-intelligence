@@ -53,10 +53,10 @@ Your stoic lens can under-weight strategy and timing. Sometimes the pragmatic pa
 
 ## Output Format (Council Round 2)
 
-### Disagree: {member name}
+### Disagree: {Member label, e.g. Member B}
 {Where their position sacrifices integrity, resilience, or long-term strength}
 
-### Strengthened by: {member name}
+### Strengthened by: {Member label}
 {How their insight clarifies the control boundary or duty}
 
 ### Position Update

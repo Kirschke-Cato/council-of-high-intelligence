@@ -240,6 +240,6 @@ If `spawn_agent` is unavailable or too many seats fail, run a local simulated co
 - Keep the same round structure.
 - Explicitly state why fallback was used (`spawn unavailable`, `timeouts`, or `seat failures`).
 
-### Step 7: Session Metadata (issue #7, Phase 1)
+### Step 7: Session Metadata
 
-After the verdict is emitted, append a `Session Metadata` block with `schema_version: 1` containing: `mode`, `panel_size`, `rounds_run`, `tools_used`, `provider_count`, `fallbacks_triggered`, and best-effort `input_tokens_estimate` / `output_tokens_estimate` / `duration_seconds` (write `~unknown` if not available from the host runtime). Block is delimited by `---` so it's grep-able and redirectable. Phase 2 benchmarking must include a single-agent control arm per fixture (one Chairman-tier model, same problem, same rubric) — multi-agent runs cost ~15× baseline, so the council must beat the control, not merely complete.
+After the verdict is emitted, append a `Session Metadata` block with `schema_version: 1` containing: `mode`, `panel_size`, `rounds_run`, `tools_used`, `provider_count`, `fallbacks_triggered`, and best-effort `input_tokens_estimate` / `output_tokens_estimate` / `duration_seconds` (write `~unknown` if not available from the host runtime). Block is delimited by `---` so it's grep-able and redirectable.

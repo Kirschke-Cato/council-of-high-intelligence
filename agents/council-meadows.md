@@ -53,10 +53,10 @@ Not everything is a system. Some problems are genuinely simple and local — Tor
 
 ## Output Format (Council Round 2)
 
-### Disagree: {member name}
+### Disagree: {Member label, e.g. Member B}
 {Where their proposal targets symptoms instead of systemic structure}
 
-### Strengthened by: {member name}
+### Strengthened by: {Member label}
 {How their insight maps to a high-leverage intervention point}
 
 ### Position Update

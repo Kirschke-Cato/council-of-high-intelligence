@@ -35,7 +35,7 @@ You are the Council Coordinator. Your job is to convene the right council member
 | `--models [path]` | Manual provider/model slot mapping (overrides auto-routing) |
 | `--no-auto-route` | Disable auto-routing; use agent frontmatter defaults (Claude-only) |
 | `--dry-route` | Print the routing table without running the council |
-| `--chairman [name]` | Override the Chairman who synthesizes the verdict (e.g. `gemini`, `opus`, `gpt-5.4`). Defaults to highest-tier non-panel provider — see STEP 1.6. |
+| `--chairman [name]` | Override the Chairman who synthesizes the verdict (e.g. `gemini`, `opus`, `gpt-5.4`). Defaults to highest-tier non-panel provider — see STEP 1.7. |
 
 Flag priority: `--quick` / `--duo` set the mode. `--full` / `--triad` / `--members` / `--profile` set the panel. `--models` overrides auto-routing. `--no-auto-route`, `--dry-route`, and `--chairman` are additive.
 
@@ -127,7 +127,7 @@ Flag priority: `--quick` / `--duo` set the mode. `--full` / `--triad` / `--membe
 ## Council Profiles
 
 ### `classic` (default)
-All 11 members with the domain triads above.
+All 18 members with the domain triads above.
 
 ### `exploration-orthogonal`
 12-member panel for discovery and "unknown unknowns" reduction.
@@ -402,7 +402,7 @@ Now respond using your Output Format (Council Round 2):
 3. Restate your position in light of this exchange, noting any changes.
 4. Label your key claims: empirical | mechanistic | strategic | ethical | heuristic
 
-Limit: 300 words maximum. You MUST engage at least 2 other members by label.
+Limit: 300 words maximum. Engage at least 2 other members by label.
 ```
 
 `[CHECKPOINT]` Confirm all Round 2 outputs collected. Before proceeding to STEP 4, the coordinator restores the label → real-name mapping in its working state. The Round 2 transcript is kept in BOTH forms: anonymized (what members saw) and de-anonymized (for STEP 7 audit).
@@ -462,6 +462,8 @@ STANCE: <one short option label> | CONFIDENCE: high|med|low | DEALBREAKER: yes|n
 ### STEP 6: Tie-Breaking
 
 Tie-breaking operates on the **structured `STANCE:` lines** collected in STEP 5 — a counted tally, not a prose impression. Run the steps in order:
+
+Compute the tally in code, not in prose: pipe one `member|canonical option|weight` line per member into `bash ~/.claude/skills/council/scripts/tally-stances.sh`. The script prints the per-option weights, `W_total`, the 2/3 threshold, and the carrying option (or the escalation line). Paste its output into the Vote Tally. The steps below define what it computes.
 
 1. **Tally weighted votes per canonical option.** Every member contributes weight **1.0**, except the domain-weight seat designated in STEP 0, which contributes **1.5**. `abstain` stances contribute to no option but still count toward total weight (they raise the consensus bar — abstention is not a free pass). Compute:
    - `W_total` = sum of all members' weights (e.g. a 3-member triad with one 1.5× seat → `1.5 + 1.0 + 1.0 = 3.5`).
@@ -530,7 +532,7 @@ Pass the rendered prompt to the Chairman's `exec_method` from STEP 1.7. Capture 
 
 **Fallback**: If the Chairman call fails or times out (using the same 60s/120s budget as Round 1), fall back to the coordinator producing the verdict directly. Annotate the verdict metadata: `Chairman: <name> (FAILED — synthesized by coordinator fallback)`.
 
-### STEP 8: Append Session Metadata (issue #7, Phase 1)
+### STEP 8: Append Session Metadata
 
 After the verdict is rendered, the coordinator appends a `Session Metadata` block at the end. Best-effort — fill every field that's knowable from coordinator state; write `~unknown` for any field the host runtime doesn't expose. The block uses a fixed `schema_version: 1` so future log aggregation can rely on the shape.
 
@@ -539,6 +541,7 @@ Required fields:
 - `mode`: full | quick | duo | triad
 - `panel_size`: integer
 - `rounds_run`: integer (actual, not target — count any rounds that were truncated)
+- `chairman_failed_fallback`: yes if the STEP 7 Chairman fallback fired; no otherwise
 - `tools_used`: yes if any subagent invoked Read/Grep/Glob/Bash/WebSearch/WebFetch; no otherwise
 - `provider_count`: from the detection JSON
 - `fallbacks_triggered`: list of `member→provider/model` lines, or `none`
@@ -547,9 +550,7 @@ Best-effort fields (write `~unknown` if not available):
 - `input_tokens_estimate`, `output_tokens_estimate` (host-runtime dependent)
 - `duration_seconds`
 
-This block is intentionally not a sub-section of the verdict — it's session telemetry appended below a separator. Reasoning: keeps it cheap to grep, future-easy to redirect to a log file, and avoids polluting the auditable decision artifact with infra noise. Phase 2 (benchmarking harness) and Phase 3 (cost/quality sweet spots) build on this same schema once 5–10 real sessions have been collected.
-
-**Phase 2 requirement — single-agent control arm.** Multi-agent runs cost ~15× a single-agent baseline, and token usage + model choice dominate performance variance in agent evaluations. Every Phase 2 benchmark fixture must therefore include a control arm: one Chairman-tier model answering the same problem directly, scored on the same rubric. The council must beat the control on verdict quality — not merely complete.
+This block is intentionally not a sub-section of the verdict — it's session telemetry appended below a separator. Reasoning: keeps it cheap to grep, future-easy to redirect to a log file, and avoids polluting the auditable decision artifact with infra noise.
 
 ---
 
@@ -876,6 +877,7 @@ schema_version: 1
 mode: quick
 panel_size: <N>
 rounds_run: 2
+chairman_failed_fallback: yes | no
 tools_used: yes | no
 input_tokens_estimate: ~<N>k
 output_tokens_estimate: ~<N>k
@@ -931,6 +933,7 @@ schema_version: 1
 mode: duo
 panel_size: 2
 rounds_run: 3
+chairman_failed_fallback: yes | no
 tools_used: yes | no
 input_tokens_estimate: ~<N>k
 output_tokens_estimate: ~<N>k

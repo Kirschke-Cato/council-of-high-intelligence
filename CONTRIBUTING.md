@@ -25,6 +25,10 @@ To remove a merged local branch:
 
 - `git branch -d feat/your-change`
 
+## Benchmarking
+
+The Session Metadata block (`schema_version: 1`) is the logging schema for a future benchmarking harness. Every benchmark fixture must include a single-agent control arm: one Chairman-tier model answering the same problem directly, scored on the same rubric. Multi-agent runs cost ~15× a single-agent baseline, so the council must beat the control on verdict quality, not merely complete.
+
 ## Style notes
 
 - Keep docs and installer behavior in sync.

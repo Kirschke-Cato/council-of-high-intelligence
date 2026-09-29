@@ -4,11 +4,13 @@
 
 - `SKILL.md` — coordinator protocol with execution sequence, modes, and verdict templates
 - `SKILL.codex.md` — Codex-specific council coordinator protocol
+- `SKILL.gemini.md` — Gemini CLI-specific council coordinator protocol
 - `agents/council-*.md` — 18 member personas with YAML frontmatter
-- `install.sh` — installs to `~/.claude/` and optionally `~/.codex/skills/council/`
+- `install.sh` — installs to `~/.claude/` and optionally `~/.codex/skills/council/` (`--codex`) or a Gemini extension under `~/.gemini/` (`--gemini`)
 - `configs/` — provider/model routing templates
 - `demos/` — example prompts and scoring rubric
-- `scripts/` — validation checklist
+- `scripts/` — validation checklist, provider detection (`detect-providers.sh`), and the stance tally (`tally-stances.sh`)
+- `docs/` — design notes and research digests
 
 ## Conventions
 
@@ -27,6 +29,7 @@
 - Always run `./scripts/council-simulation-checklist.sh` after changes
 - Always run `./install.sh --dry-run` to verify installation
 - When changing Codex installation, also run `./install.sh --dry-run --codex`
+- When changing Gemini installation, also run `./install.sh --dry-run --gemini`
 - Test at least one mode (full/quick/duo) after protocol changes
 
 ### Style

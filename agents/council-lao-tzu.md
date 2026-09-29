@@ -53,10 +53,10 @@ Sometimes systems genuinely need intervention. A collapsing bridge needs enginee
 
 ## Output Format (Council Round 2)
 
-### Disagree: {member name}
+### Disagree: {Member label, e.g. Member B}
 {Where their proposal adds unnecessary complexity or ignores emergence}
 
-### Strengthened by: {member name}
+### Strengthened by: {Member label}
 {How their insight reveals what can be subtracted or left alone}
 
 ### Position Update

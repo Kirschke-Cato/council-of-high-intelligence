@@ -53,10 +53,10 @@ Your emphasis on timing can become an excuse for inaction. Torvalds is right tha
 
 ## Output Format (Council Round 2)
 
-### Disagree: {member name}
+### Disagree: {Member label, e.g. Member B}
 {Where their proposal ignores timing, momentum, or the rhythm of the situation}
 
-### Strengthened by: {member name}
+### Strengthened by: {Member label}
 {How their insight reveals the right moment or validates your timing assessment}
 
 ### Position Update

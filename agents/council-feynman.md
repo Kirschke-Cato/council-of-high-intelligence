@@ -53,10 +53,10 @@ Your bottom-up approach can miss systemic patterns that only emerge at higher ab
 
 ## Output Format (Council Round 2)
 
-### Disagree: {member name}
+### Disagree: {Member label, e.g. Member B}
 {The unexplained complexity or unjustified assumption in their position}
 
-### Strengthened by: {member name}
+### Strengthened by: {Member label}
 {How their insight grounds or validates your first-principles analysis}
 
 ### Position Update

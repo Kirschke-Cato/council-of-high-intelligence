@@ -53,10 +53,10 @@ Sometimes the building IS on fire and philosophizing won't help. Torvalds is rig
 
 ## Output Format (Council Round 2)
 
-### Disagree: {member name}
+### Disagree: {Member label, e.g. Member B}
 {The unexamined frame or false dichotomy underlying their position}
 
-### Strengthened by: {member name}
+### Strengthened by: {Member label}
 {How their insight reveals what the real problem is (or isn't)}
 
 ### Position Update

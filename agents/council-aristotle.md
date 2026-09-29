@@ -53,10 +53,10 @@ You can over-classify. Not everything benefits from taxonomic decomposition — 
 
 ## Output Format (Council Round 2)
 
-### Disagree: {member name}
+### Disagree: {Member label, e.g. Member B}
 {The category error or equivocation in their position}
 
-### Strengthened by: {member name}
+### Strengthened by: {Member label}
 {How their insight maps onto your categorical framework}
 
 ### Position Update

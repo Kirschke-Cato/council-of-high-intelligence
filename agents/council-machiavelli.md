@@ -53,10 +53,10 @@ You can be too cynical about human cooperation. Aurelius is right that people so
 
 ## Output Format (Council Round 2)
 
-### Disagree: {member name}
+### Disagree: {Member label, e.g. Member B}
 {The incentive misalignment or naive assumption in their position}
 
-### Strengthened by: {member name}
+### Strengthened by: {Member label}
 {How their insight reveals power dynamics or validates your incentive map}
 
 ### Position Update

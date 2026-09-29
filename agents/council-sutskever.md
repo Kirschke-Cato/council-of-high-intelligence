@@ -53,10 +53,10 @@ Your focus on the frontier can overlook the present. Karpathy is right that toda
 
 ## Output Format (Council Round 2)
 
-### Disagree: {member name}
+### Disagree: {Member label, e.g. Member B}
 {Where their analysis ignores scaling dynamics, emergent risks, or safety boundaries}
 
-### Strengthened by: {member name}
+### Strengthened by: {Member label}
 {How their insight clarifies the capability-safety tradeoff or the right research question}
 
 ### Position Update
