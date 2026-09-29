@@ -9,7 +9,8 @@ This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Added
 - **Chairman audit gate.** Every Chairman synthesis prompt (STEP 7, QUICK STEP 3, DUO STEP 4) now inserts two reusable blocks from the Output Templates section: the **Chairman Audit Checklist** — seven enumerated transcript failure modes (stance-label gerrymandering, silent position updates without a named flaw, evidence-label inflation, unfalsifiable kill criteria, dropped `DEALBREAKER: yes` dissent, invented consensus, consensus-by-repetition) the Chairman must hunt for and name in the verdict — and the **Verdict Non-Counting List** — verdict-shaped near misses ("it depends" without decision conditions, restated dilemma as consensus, kill criteria without threshold + date, next step without an artifact verb, hedged endorsement of everything) that force a redo. Enumerated failure modes catch what generic "weigh by validity" instructions miss. Mirrored in `SKILL.codex.md` and `SKILL.gemini.md`.
 - **Clustered cross-examination for panels ≥ 12** (STEP 3). Partition into clusters of 4–6, polarity pairs kept together, labels global, each member sees only their cluster's anonymized Round 1 outputs; the >70% agreement check still spans the full panel. Bounds coordinator payload and per-member input at `--full` scale (supervisor-bottleneck guidance caps workers-per-supervisor at 3–5). Mirrored in both coordinator variants.
-- **Phase 2 single-agent control arm requirement** (STEP 8). Benchmark fixtures must include one Chairman-tier model answering the same problem directly on the same rubric — multi-agent runs cost ~15× baseline, so the council must beat the control, not merely complete.
+- **Phase 2 single-agent control arm requirement** (`CONTRIBUTING.md` → Benchmarking; moved out of the runtime skill files). Benchmark fixtures must include one Chairman-tier model answering the same problem directly on the same rubric — multi-agent runs cost ~15× baseline, so the council must beat the control, not merely complete.
+- `scripts/tally-stances.sh` — computes the STEP 6 weighted `STANCE` tally (per-option weights, `W_total`, 2/3 threshold, carrying option or escalation) in code; the coordinator still normalizes labels. Installed for Claude, Codex, and Gemini.
 - `docs/context-engineering-findings.md` — review of muratcankoylan/Agent-Skills-for-Context-Engineering mapped against the council protocol; `demos/long-horizon-brief.md` — pseudo-formal "Council Gauntlet" brief produced by exercising that repo's long-horizon-prompting skill end-to-end.
 
 ### Changed
@@ -20,6 +21,13 @@ This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Changed
 - **Domain-weight seat (1.5×) is now designated at panel selection (STEP 0), before any positions exist** — previously chosen at tie-break time, which let the coordinator pick the heavyweight after seeing votes. Locking it up front removes that nudge.
 - README "Enforcement Mechanisms" rewritten to state the actual forcing function (bounded round budget + anti-recursion guards) and that genuine splits escalate to the user instead of being forced into consensus.
+
+### Fixed
+- Agent Round 2 output headers now use anonymized `Member X` labels instead of `{member name}`, matching the Round 2 rule that forbids real names.
+- `SKILL.md`: the `classic` profile lists 18 members (was 11); the `--chairman` flag points to STEP 1.7 (was a nonexistent STEP 1.6).
+- `council-socrates`: Round 3 is Final Crystallization, not Synthesis.
+- Session Metadata: `chairman_failed_fallback` is now in the STEP 8 field list and the quick and duo templates.
+- `CLAUDE.md`: architecture list covers `SKILL.gemini.md`, `docs/`, `detect-providers.sh`, and the `--gemini` installer option.
 
 ## [1.1.0] - 2026-05-21
 
